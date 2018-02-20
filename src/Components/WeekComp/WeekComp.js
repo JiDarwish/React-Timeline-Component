@@ -18,11 +18,11 @@ export default class WeekComp extends Component {
     return (
       <div
         className={classes.weekCompContainer}
-        stlye={{ width: itemWidth + 'px' }}
+        style={{ width: itemWidth + 'px' }}
       >
         <span
-          style={{ height: halfHeight, lineHeight: halfHeight }}
           className={classes.monthContainer}
+          style={{ height: halfHeight, lineHeight: halfHeight }}
         >
           {month}
         </span>

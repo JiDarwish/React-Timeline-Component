@@ -10,7 +10,8 @@
 }
 
 .groupId {
-  background-color: rgb(255, 179, 64);
+  background-color: rgb(13, 107, 196);
+  color: white;
   border-radius: 50%;
   padding: 8px;
 }

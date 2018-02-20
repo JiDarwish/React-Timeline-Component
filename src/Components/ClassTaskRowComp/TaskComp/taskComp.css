@@ -1,0 +1,22 @@
+.container {
+  margin: 8px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: inset 0 -1px 0 0 #eff2f3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flexWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #ef7263;
+  color: #fff;
+  padding: 10px;
+}
+
+/* .container > * {
+  margin: 5px;
+} */

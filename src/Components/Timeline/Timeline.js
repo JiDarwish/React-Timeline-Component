@@ -9,9 +9,10 @@ import {
 
 import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
+import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
 import classes from './timeline.css';
-const weekLength = '200';
-const rowHeight = '70';
+const weekWidth = '200';
+const rowHeight = '85';
 
 export default class Timeline extends Component {
   state = {
@@ -30,11 +31,34 @@ export default class Timeline extends Component {
             key={week}
             week={week}
             rowHeight={rowHeight}
-            itemWidth={weekLength}
+            itemWidth={weekWidth}
           />
         ))}
       </div>
     );
+  };
+
+  renderTaskRowComp = () => {
+    if (
+      !this.state.groups ||
+      !this.state.timelineItems ||
+      !this.state.allWeeks
+    ) {
+      return null;
+    }
+    return this.state.groups.map(group => {
+      const items = this.state.timelineItems[group];
+      return (
+        <div key={items[0].group_name} className={classes.rowContainer}>
+          <ClassTaskRowComp
+            items={items}
+            width={weekWidth}
+            height={rowHeight}
+            allWeeks={this.state.allWeeks}
+          />
+        </div>
+      );
+    });
   };
 
   observer = mergedData => {
@@ -68,12 +92,18 @@ export default class Timeline extends Component {
   render() {
     const { allWeeks } = this.state;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
-    const width = allWeeks ? weekLength * allWeeks.length + 'px' : '100vw';
+    // FIXME: no idea why this is not working with just 16 instead of 21
+    const width = allWeeks
+      ? weekWidth * allWeeks.length + 21 * allWeeks.length + 'px'
+      : '100vw';
     return (
       <div className={classes.root}>
         <div className={classes.timelineContainer} style={{ width: width }}>
           <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />
-          <div className={classes.rowsContainer}>{this.renderWeekComp()}</div>
+          <div className={classes.rowsContainer}>
+            {this.renderWeekComp()}
+            {this.renderTaskRowComp()}
+          </div>
         </div>
       </div>
     );

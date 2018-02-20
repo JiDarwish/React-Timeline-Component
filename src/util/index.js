@@ -39,6 +39,33 @@ export function getAllTotalWeeksAndSundays(allItems) {
   return allWeeks;
 }
 
+export function getWeeksBeforeAndAfter(allWeeks, classModules) {
+  // starting date of the first module of a class
+  const firstModuleStartingDate = moment.min(
+    classModules.map(week => week.starting_date)
+  );
+
+  // the ending date of the last module of a class
+  const lastModuleEndingDate = moment.max(
+    classModules.map(week => week.ending_date)
+  );
+
+  // get an array with all the weeks before the start of this class
+  const weeksBefore = allWeeks.filter(week =>
+    week[0].isBefore(firstModuleStartingDate)
+  );
+
+  // get an array with all the weeks agter the course has ended
+  const weeksAfter = allWeeks.filter(week =>
+    week[1].isAfter(lastModuleEndingDate)
+  );
+
+  return {
+    weeksBefore,
+    weeksAfter
+  };
+}
+
 function _getAllWeeks(startingDate, endingDate) {
   const allSundays = [];
   let tempDate = startingDate.clone();
