@@ -7,10 +7,20 @@ export default class ClassBarRowComp extends Component {
   renderAllRowComp = () => {
     if (!this.props.groups) return;
     return this.props.groups.map(group => (
-      <ClassRowComp classId={group.split(' ')[1]} />
+      <ClassRowComp
+        key={group}
+        classId={group.split(' ')[1]}
+        height={this.props.rowHeight}
+      />
     ));
   };
   render() {
-    return <div className={classes.container}>{this.renderAllRowComp()}</div>;
+    // displaying one extra component to fill in the empty place in the top-right corner
+    return (
+      <div className={classes.container}>
+        <ClassRowComp height={this.props.rowHeight} />
+        {this.renderAllRowComp()}
+      </div>
+    );
   }
 }

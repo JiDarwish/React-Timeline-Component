@@ -13,14 +13,20 @@ export default class WeekComp extends Component {
     }
     sunday1 = sunday1.format('DD');
     sunday2 = sunday2.format('DD');
-    const { itemWidth } = this.props;
+    const { itemWidth, rowHeight } = this.props;
+    const halfHeight = rowHeight / 2 + 'px';
     return (
       <div
         className={classes.weekCompContainer}
         stlye={{ width: itemWidth + 'px' }}
       >
-        <span className={classes.monthContainer}>{month}</span>
-        <span className={classes.daysContainer}>
+        <span
+          style={{ height: halfHeight, lineHeight: halfHeight }}
+          className={classes.monthContainer}
+        >
+          {month}
+        </span>
+        <span style={{ height: halfHeight }} className={classes.daysContainer}>
           <span>{sunday1}</span>
           <span>{sunday2}</span>
         </span>

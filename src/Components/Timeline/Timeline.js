@@ -11,6 +11,7 @@ import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import classes from './timeline.css';
 const weekLength = '200';
+const rowHeight = '70';
 
 export default class Timeline extends Component {
   state = {
@@ -25,7 +26,12 @@ export default class Timeline extends Component {
     return (
       <div className={classes.rowContainer}>
         {this.state.allWeeks.map(week => (
-          <WeekComp key={week} week={week} itemWidth={weekLength} />
+          <WeekComp
+            key={week}
+            week={week}
+            rowHeight={rowHeight}
+            itemWidth={weekLength}
+          />
         ))}
       </div>
     );
@@ -66,7 +72,7 @@ export default class Timeline extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.timelineContainer} style={{ width: width }}>
-          <ClassBarRowComp groups={this.state.groups} />
+          <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />
           <div className={classes.rowsContainer}>{this.renderWeekComp()}</div>
         </div>
       </div>
