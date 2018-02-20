@@ -1,8 +1,10 @@
 import moment from 'moment';
+import fakeData from '../Data/fakeData.json';
 
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems(url) {
-  return fetch(url).then(res => res.json());
+  return Promise.resolve(fakeData);
+  // return fetch(url).then(res => res.json());
 }
 
 export function setEndingDateForModules(allItems, groups) {
