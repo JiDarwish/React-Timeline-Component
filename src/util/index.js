@@ -91,3 +91,12 @@ function _getAllWeeks(startingDate, endingDate) {
 // export function getTotalNumOfWeeks(startingDate, endingDate) {
 //   return endingDate.diff(startingDate, 'weeks');
 // }
+
+export function getCurrentWeek(week, width) {
+  const today = new moment();
+  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null;
+  const dayDiff = today.diff(week[0], 'days');
+  const oneDayWidth = width / 7;
+  const offset = oneDayWidth * dayDiff;
+  return offset;
+}

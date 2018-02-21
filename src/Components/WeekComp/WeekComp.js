@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 
 import classes from './weekComp.css';
+import TodayMarker from './TodayMarker/TodayMarker';
+import { getCurrentWeek } from '../../util';
 
 export default class WeekComp extends Component {
+  setTodayMarker = () => {
+    const offset = getCurrentWeek(this.props.week, this.props.itemWidth);
+    if (!offset) return null;
+    // return null;
+    return <TodayMarker offset={offset} />;
+  };
   render() {
     let [sunday1, sunday2] = this.props.week;
     let month;
@@ -15,11 +23,14 @@ export default class WeekComp extends Component {
     sunday2 = sunday2.format('DD');
     const { itemWidth, rowHeight } = this.props;
     const halfHeight = rowHeight / 2 + 'px';
+
+    const todayMarkerComp = this.setTodayMarker(itemWidth);
     return (
       <div
         className={classes.weekCompContainer}
         style={{ width: itemWidth + 'px' }}
       >
+        {todayMarkerComp}
         <span
           className={classes.monthContainer}
           style={{ height: halfHeight, lineHeight: halfHeight }}

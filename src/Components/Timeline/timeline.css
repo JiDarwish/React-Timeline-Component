@@ -1,7 +1,7 @@
 .root {
   max-width: 100vw;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: hidden; /* this is killing the style, there's overflow because of the TodayMarker and but it's causing the container to scrollY a but */
   position: relative;
 }
 

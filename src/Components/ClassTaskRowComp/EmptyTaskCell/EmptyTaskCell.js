@@ -4,7 +4,6 @@ import classes from './emptyTaskCell.css';
 export default class EmptyTaskCell extends Component {
   render() {
     const { width, height } = this.props;
-    console.log(width);
     return (
       <div
         className={classes.container}

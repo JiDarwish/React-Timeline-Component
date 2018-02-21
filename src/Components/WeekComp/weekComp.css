@@ -1,8 +1,8 @@
 .weekCompContainer {
+  position: relative;
   margin: 8px;
   display: flex;
   flex-direction: column;
-  /* width: 200px; */
 }
 
 .monthContainer {
