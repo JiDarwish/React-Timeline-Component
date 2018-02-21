@@ -15,9 +15,9 @@ export default class ClassBarRowComp extends Component {
     ));
   };
   render() {
-    // displaying one extra component to fill in the empty place in the top-right corner
+    // displaying one extra component to fill in the empty place in the top-left corner
     return (
-      <div className={classes.container}>
+      <div className={classes.container + ' fixMeToLeft'}>
         <ClassRowComp height={this.props.rowHeight} />
         {this.renderAllRowComp()}
       </div>

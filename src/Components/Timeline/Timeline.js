@@ -10,9 +10,10 @@ import {
 import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
+import TodayMarker from '../TodayMarker/TodayMarker';
 import classes from './timeline.css';
-const weekWidth = '200';
-const rowHeight = '85';
+const weekWidth = '125';
+const rowHeight = '60';
 
 export default class Timeline extends Component {
   state = {
@@ -89,6 +90,11 @@ export default class Timeline extends Component {
     timelineStore.unsubscribe(this.observer);
   };
 
+  fixListOfClassesToLeft = (event) => {
+    const groupsColumn = document.getElementsByClassName('fixMeToLeft')[0];
+    groupsColumn.style.top = 0 + 'px';
+  }
+
   render() {
     const { allWeeks } = this.state;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
@@ -97,10 +103,11 @@ export default class Timeline extends Component {
       ? weekWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
-      <div className={classes.root}>
+      <div className={classes.root} onScroll={this.fixListOfClassesToLeft}>
         <div className={classes.timelineContainer} style={{ width: width }}>
           <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />
           <div className={classes.rowsContainer}>
+          <TodayMarker allWeeks={allWeeks} />
             {this.renderWeekComp()}
             {this.renderTaskRowComp()}
           </div>

@@ -6,6 +6,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  white-space: nowrap;
+}
+
+.container:hover {
+  white-space: normal;
 }
 
 .flexWrapper {
@@ -16,7 +21,3 @@
   color: #fff;
   padding: 10px;
 }
-
-/* .container > * {
-  margin: 5px;
-} */
