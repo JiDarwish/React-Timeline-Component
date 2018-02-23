@@ -9,3 +9,4 @@ export const timelineStore = (window.timelineStore = TimelineStore());
 export const TIMELINE_GROUPS_CHANGED = 'TIMELINE_GROUPS_CHANGED';
 export const TIMELINE_ITEMS_CHANGED = 'TIMELINE_ITEMS_CHANGED';
 export const ALL_WEEKS_CHANGED = 'ALL_WEEKS_CHANGED';
+export const GROUPS_COLUMN_REFERENCE = 'GROUPS_COLUMN_REFERENCE';
