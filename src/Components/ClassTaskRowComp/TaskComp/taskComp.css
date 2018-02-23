@@ -19,5 +19,6 @@
   justify-content: center;
   background-color: #ef7263;
   color: #fff;
-  padding: 10px;
+  padding: 5px;
+  border-radius: 5px;
 }

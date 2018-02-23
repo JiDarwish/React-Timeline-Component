@@ -5,10 +5,12 @@ import {
   TIMELINE_ITEMS_CHANGED,
   TIMELINE_GROUPS_CHANGED,
   ALL_WEEKS_CHANGED,
-  GROUPS_COLUMN_REFERENCE
+  GROUPS_COLUMN_REFERENCE,
+  TODAY_MARKER_REFERENCE
 } from '../../Store';
 
 import WeekComp from '../WeekComp/WeekComp';
+import RoundButton from '../../Helpers/RoundButton/RoundButton';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
 import classes from './timeline.css';
@@ -21,7 +23,8 @@ export default class Timeline extends Component {
     groups: null,
     allWeeks: null,
     totalWeeks: null,
-    groupsColumnRef: null
+    groupsColumnRef: null,
+    todayMarkerRef: null
   };
 
   renderWeekComp = () => {
@@ -68,6 +71,9 @@ export default class Timeline extends Component {
       case TIMELINE_ITEMS_CHANGED:
         this.setState({ timelineItems: mergedData.payload.items });
         break;
+      case TODAY_MARKER_REFERENCE:
+        this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
+        break;
       case TIMELINE_GROUPS_CHANGED:
         this.setState({ groups: mergedData.payload.groups });
         break;
@@ -85,7 +91,18 @@ export default class Timeline extends Component {
 
   handleScroll = e => {
     const { groupsColumnRef } = this.state;
-    groupsColumnRef.style.left = e.target.scrollLeft + 'px';
+    const { scrollLeft, clientWidth } = e.target;
+    // I am setting this.state.... = but this is just a reference to an element
+    // scroll the groups row along
+    groupsColumnRef.style.left = scrollLeft + 'px';
+
+    //scroll the buttons along
+    this.refs.buttonsContainer.style.left =
+      scrollLeft + clientWidth - 70 + 'px';
+  };
+
+  hadnleClickTodayMarker = e => {
+    this.state.todayMarkerRef.scrollIntoView({ behavior: 'smooth' });
   };
 
   componentWillMount = () => {
@@ -113,6 +130,23 @@ export default class Timeline extends Component {
     return (
       <div className={classes.root} onScroll={this.handleScroll}>
         <div className={classes.timelineContainer} style={{ width: width }}>
+          <div className={classes.buttonsContainer} ref="buttonsContainer">
+            <RoundButton
+              clickHandler={() => console.log('implemented when integrating')}
+              action="+"
+              title="Add a class"
+            />
+            <RoundButton
+              clickHandler={() => console.log('implementing when integrating')}
+              action="..."
+              title="more info"
+            />
+            <RoundButton
+              clickHandler={this.hadnleClickTodayMarker}
+              action=">"
+              title="Go to today"
+            />
+          </div>
           <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />
           <div className={classes.rowsContainer}>
             {this.renderWeekComp()}
