@@ -4,4 +4,5 @@
   border: 2px solid orangered;
   height: 1000px;
   top: 0;
+  z-index: 1;
 }

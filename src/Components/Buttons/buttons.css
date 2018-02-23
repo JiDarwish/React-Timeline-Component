@@ -1,0 +1,10 @@
+.buttonsWrapper {
+  position: absolute;
+  bottom: 10px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+.buttonsWrapper > * {
+  margin-top: 5px;
+}

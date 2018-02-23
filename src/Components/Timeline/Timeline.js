@@ -6,25 +6,28 @@ import {
   TIMELINE_GROUPS_CHANGED,
   ALL_WEEKS_CHANGED,
   GROUPS_COLUMN_REFERENCE,
-  TODAY_MARKER_REFERENCE
+  TODAY_MARKER_REFERENCE,
+  SELECTED_MODULE_ID_CHANGED
 } from '../../Store';
 
 import WeekComp from '../WeekComp/WeekComp';
-import RoundButton from '../../Helpers/RoundButton/RoundButton';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
+import Buttons from '../Buttons/Buttons';
 import classes from './timeline.css';
 const weekWidth = '125';
 const rowHeight = '60';
 
 export default class Timeline extends Component {
   state = {
+    originalData: null,
     timelineItems: null,
     groups: null,
     allWeeks: null,
     totalWeeks: null,
     groupsColumnRef: null,
-    todayMarkerRef: null
+    todayMarkerRef: null,
+    selectedModuleId: null
   };
 
   renderWeekComp = () => {
@@ -56,6 +59,7 @@ export default class Timeline extends Component {
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
+            selectedModuleId={this.state.selectedModuleId}
             items={items}
             width={weekWidth}
             height={rowHeight}
@@ -80,6 +84,11 @@ export default class Timeline extends Component {
       case GROUPS_COLUMN_REFERENCE:
         this.setState({ groupsColumnRef: mergedData.payload.groupsColumnRef });
         break;
+      case SELECTED_MODULE_ID_CHANGED:
+        this.setState({
+          selectedModuleId: mergedData.payload.selectedModuleId
+        });
+        break;
       case ALL_WEEKS_CHANGED:
         const { allWeeks } = mergedData.payload;
         this.setState({ allWeeks: allWeeks, totalWeeks: allWeeks.length });
@@ -101,7 +110,8 @@ export default class Timeline extends Component {
       scrollLeft + clientWidth - 70 + 'px';
   };
 
-  hadnleClickTodayMarker = e => {
+  handleClickTodayMarker = e => {
+    console.log('clickHandler');
     this.state.todayMarkerRef.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -130,21 +140,10 @@ export default class Timeline extends Component {
     return (
       <div className={classes.root} onScroll={this.handleScroll}>
         <div className={classes.timelineContainer} style={{ width: width }}>
-          <div className={classes.buttonsContainer} ref="buttonsContainer">
-            <RoundButton
-              clickHandler={() => console.log('implemented when integrating')}
-              action="+"
-              title="Add a class"
-            />
-            <RoundButton
-              clickHandler={() => console.log('implementing when integrating')}
-              action="..."
-              title="more info"
-            />
-            <RoundButton
-              clickHandler={this.hadnleClickTodayMarker}
-              action=">"
-              title="Go to today"
+          <div ref="buttonsContainer" className={classes.buttonsContainer}>
+            <Buttons
+              clickHandler={this.handleClickTodayMarker}
+              isTeacher={true}
             />
           </div>
           <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />

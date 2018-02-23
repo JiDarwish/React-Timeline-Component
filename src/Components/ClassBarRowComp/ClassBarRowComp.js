@@ -27,10 +27,15 @@ export default class ClassBarRowComp extends Component {
   };
 
   render() {
+    // margin top is width of one extra element + the margin on both sides
+    const marginTop = +this.props.rowHeight + 16;
     // displaying one extra component to fill in the empty place in the top-left corner
     return (
-      <div ref="groupsRowContainer" className={classes.container}>
-        <ClassRowComp height={this.props.rowHeight} />
+      <div
+        ref="groupsRowContainer"
+        style={{ marginTop: marginTop + 'px' }}
+        className={classes.container}
+      >
         {this.renderAllRowComp()}
       </div>
     );

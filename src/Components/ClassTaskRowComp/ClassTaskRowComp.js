@@ -6,7 +6,8 @@ import EmptyTaskCell from './EmptyTaskCell/EmptyTaskCell';
 
 export default class ClassTaskRowComp extends Component {
   renderAllTaskComps = () => {
-    const { width, height, allWeeks, items } = this.props;
+    const { width, height, allWeeks, items, selectedModuleId } = this.props;
+    console.log(this.props);
     const { weeksBefore, weeksAfter } = getWeeksBeforeAndAfter(allWeeks, items);
     let rowCells = [];
     if (weeksBefore.length !== 0) {
@@ -18,8 +19,9 @@ export default class ClassTaskRowComp extends Component {
     const taskRowItems = items.map(item => {
       return (
         <TaskComp
+          active={item.running_module_id === selectedModuleId}
           key={item.starting_date}
-          {...item}
+          item={{ ...item }}
           width={width}
           height={height}
         />
