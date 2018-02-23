@@ -1,7 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: -71px;
   z-index: 1;
+  transform: translateY(73px);
 }

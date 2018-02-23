@@ -1,7 +1,8 @@
 import {
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
-  ALL_WEEKS_CHANGED
+  ALL_WEEKS_CHANGED,
+  MODAL_STATE_CHANGED
 } from './';
 
 import {
@@ -82,24 +83,23 @@ export default function() {
       .catch(err => console.log(err));
   };
 
+  const handleToggleModal = () => {
+    const currentModalState = _data.isModalOpen || false;
+    setState({
+      type: MODAL_STATE_CHANGED,
+      payload: {
+        isModalOpen: !currentModalState
+      }
+    });
+  };
+
   return {
     subscribe,
     unsubscribe,
     isSubscribed,
     getState,
     setState,
-    fetchItems
+    fetchItems,
+    handleToggleModal
   };
 }
-
-///////////////////////////////////////////////////////////////// Not used for now
-
-// const handleToggleModal = () => {
-//   const currentModalState = _data.isModalOpen || false;
-//   setState({
-//     type: MODAL_STATE_CHANGED,
-//     payload: {
-//       isModalOpen: !currentModalState
-//     }
-//   });
-// };

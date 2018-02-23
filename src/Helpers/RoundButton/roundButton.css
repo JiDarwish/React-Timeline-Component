@@ -1,0 +1,25 @@
+.roundBtn {
+  cursor: pointer;
+  color: rgba(46, 43, 43, 0.87);
+  background-color: white;
+  width: 56px;
+  font-size: 2rem;
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  border: 0;
+  padding: 0;
+  transition: all 0.2s ease-out;
+}
+
+.roundBtn:hover {
+  background-color: rgba(135, 209, 243, 0.92);
+}
+
+.roundBtn:active {
+  transform: scale(1.1);
+}

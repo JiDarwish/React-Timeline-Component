@@ -14,10 +14,18 @@ export default class ClassBarRowComp extends Component {
       />
     ));
   };
+
+  handleScroll = e => {
+    console.log(e);
+  };
   render() {
     // displaying one extra component to fill in the empty place in the top-left corner
     return (
-      <div className={classes.container + ' fixMeToLeft'}>
+      <div
+        ref="columnContainer"
+        className={classes.container + ' fixMeToLeft'}
+        onScroll={this.handleScroll}
+      >
         <ClassRowComp height={this.props.rowHeight} />
         {this.renderAllRowComp()}
       </div>
