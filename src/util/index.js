@@ -1,10 +1,12 @@
 import moment from 'moment';
 import fakeData from '../Data/fakeData.json';
 
+const BASE_URL = 'http://localhost:3005';
+
 //return a promise with `then` getting the json formatted data
-export function getTimelineItems(url) {
+export function getTimelineItems() {
   return Promise.resolve(fakeData);
-  // return fetch(url).then(res => res.json());
+  // return fetch(BASE_URL + '/api/timeline').then(res => res.json());
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -68,6 +70,87 @@ export function getWeeksBeforeAndAfter(allWeeks, classModules) {
   };
 }
 
+export function getCurrentWeek(week, width) {
+  const today = new moment();
+  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null;
+  const dayDiff = today.diff(week[0], 'days');
+  const oneDayWidth = width / 7;
+  const offset = oneDayWidth * dayDiff;
+  return offset;
+}
+
+export function weekLonger(chosenModule, originalData) {
+  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
+  toBeUpdatedModule.duration = ++toBeUpdatedModule.duration;
+  console.log('plus a week', toBeUpdatedModule);
+  // return _patchModules(originalData);
+  return Promise.resolve();// for now TODO:
+  
+}
+
+export function weekShorter(chosenModule, originalData) {
+  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
+  toBeUpdatedModule.duration = --toBeUpdatedModule.duration;
+  console.log('minus a week', toBeUpdatedModule);
+  // return _patchModules(originalData);
+  return Promise.resolve();// for now TODO:
+  
+}
+
+export function moveRight(chosenModule, originalData) {
+  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
+  const indexModuleAfter =
+    originalData[chosenModule.group_name].indexOf(toBeUpdatedModule) + 1;
+  const moduleAfter = originalData[chosenModule.group_name][indexModuleAfter];
+
+  const temp = moduleAfter.position;
+
+  moduleAfter.position = toBeUpdatedModule.position;
+  toBeUpdatedModule.position = temp;
+
+  // return _patchModules(originalData);
+  console.log('updated', toBeUpdatedModule.position);
+  console.log('shifted', moduleAfter.position);
+
+  return Promise.resolve();// for now TODO:
+  
+}
+
+export function moveLeft(chosenModule, originalData) {
+  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
+  const indexModuleBefore =
+    originalData[chosenModule.group_name].indexOf(toBeUpdatedModule) - 1;
+  const moduleBefore = originalData[chosenModule.group_name][indexModuleBefore];
+
+  const temp = moduleBefore.position;
+
+  moduleBefore.position = toBeUpdatedModule.position;
+  toBeUpdatedModule.position = temp;
+
+  console.log('updated', toBeUpdatedModule.position);
+  console.log('shifted', moduleBefore.position);
+  // return _patchModules(originalData);
+  return Promise.resolve();// for now TODO:
+}
+
+// helper functions
+
+function _extractModule(module, originalData) {
+  return originalData[module.group_name].filter(
+    item => item.running_module_id === module.running_module_id
+  )[0];
+}
+
+function _patchModules(modules) {
+  return fetch(`${BASE_URL}/api/timeline`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(modules)
+  }).then(res => res.json());
+}
+
 function _getAllWeeks(startingDate, endingDate) {
   const allSundays = [];
   let tempDate = startingDate.clone();
@@ -85,18 +168,4 @@ function _getAllWeeks(startingDate, endingDate) {
   }, []);
 
   return allWeeks;
-}
-
-///////////////////////////////////////////////////////////////////////// Not really needed
-// export function getTotalNumOfWeeks(startingDate, endingDate) {
-//   return endingDate.diff(startingDate, 'weeks');
-// }
-
-export function getCurrentWeek(week, width) {
-  const today = new moment();
-  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null;
-  const dayDiff = today.diff(week[0], 'days');
-  const oneDayWidth = width / 7;
-  const offset = oneDayWidth * dayDiff;
-  return offset;
 }

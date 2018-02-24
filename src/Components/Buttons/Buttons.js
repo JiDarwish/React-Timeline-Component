@@ -1,30 +1,39 @@
 import React, { Component, Fragment } from 'react';
 
 import RoundButton from '../../Helpers/RoundButton/RoundButton';
+import Dropdown from '../../Helpers/Dropdown/Dropdown';
+import DropdownList from './DropdownList/DropdownList';
 import classes from './buttons.css';
 
 export default class Button extends Component {
   render() {
-    let teacherBtns = null;
-    if (this.props.isTeacher) {
-      teacherBtns = (
+    let addGroupBtn = null;
+    let dropdownList = null;
+    const { isTeacher, selectedModule, originalData } = this.props;
+    if (isTeacher) {
+      if (selectedModule) {
+        dropdownList = (
+          <DropdownList
+            selectedModule={selectedModule}
+            originalData={originalData}
+          />
+        );
+      }
+      addGroupBtn = (
         <Fragment>
           <RoundButton
             clickHandler={() => console.log('implemented when integrating')}
             action="+"
             title="Add a class"
           />
-          <RoundButton
-            clickHandler={() => console.log('implementing when integrating')}
-            action="..."
-            title="more info"
-          />
+          <div className={classes.containerBtnAndDropdown} />
         </Fragment>
       );
     }
     return (
       <div className={classes.buttonsWrapper}>
-        {teacherBtns}
+        {dropdownList}
+        {addGroupBtn}
         <RoundButton
           clickHandler={this.props.clickHandler}
           action=">"

@@ -7,7 +7,8 @@ import {
   ALL_WEEKS_CHANGED,
   GROUPS_COLUMN_REFERENCE,
   TODAY_MARKER_REFERENCE,
-  SELECTED_MODULE_ID_CHANGED
+  SELECTED_MODULE_ID_CHANGED,
+  ORIGINAL_DATA_CHANGED
 } from '../../Store';
 
 import WeekComp from '../WeekComp/WeekComp';
@@ -27,7 +28,7 @@ export default class Timeline extends Component {
     totalWeeks: null,
     groupsColumnRef: null,
     todayMarkerRef: null,
-    selectedModuleId: null
+    selectedModule: null
   };
 
   renderWeekComp = () => {
@@ -59,7 +60,7 @@ export default class Timeline extends Component {
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
-            selectedModuleId={this.state.selectedModuleId}
+            selectedModule={this.state.selectedModule}
             items={items}
             width={weekWidth}
             height={rowHeight}
@@ -78,6 +79,9 @@ export default class Timeline extends Component {
       case TODAY_MARKER_REFERENCE:
         this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
         break;
+      case ORIGINAL_DATA_CHANGED:
+        this.setState({ originalData: mergedData.payload.originalData });
+        break;
       case TIMELINE_GROUPS_CHANGED:
         this.setState({ groups: mergedData.payload.groups });
         break;
@@ -86,7 +90,7 @@ export default class Timeline extends Component {
         break;
       case SELECTED_MODULE_ID_CHANGED:
         this.setState({
-          selectedModuleId: mergedData.payload.selectedModuleId
+          selectedModule: mergedData.payload.selectedModule
         });
         break;
       case ALL_WEEKS_CHANGED:
@@ -142,8 +146,10 @@ export default class Timeline extends Component {
         <div className={classes.timelineContainer} style={{ width: width }}>
           <div ref="buttonsContainer" className={classes.buttonsContainer}>
             <Buttons
+              originalData={this.state.originalData}
               clickHandler={this.handleClickTodayMarker}
               isTeacher={true}
+              selectedModule={this.state.selectedModule}
             />
           </div>
           <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />

@@ -5,10 +5,18 @@ import { timelineStore, SELECTED_MODULE_ID_CHANGED } from '../../../Store';
 
 export default class TaskComp extends Component {
   handleClick = e => {
+    let item = this.props.item;
+    const selectedItemInStore = timelineStore.getState().selectedModule;
+    if (selectedItemInStore) {
+      // if the clicked module is the same on unselect it
+      if (item.running_module_id === selectedItemInStore.running_module_id) {
+        item = null;
+      }
+    }
     timelineStore.setState({
       type: SELECTED_MODULE_ID_CHANGED,
       payload: {
-        selectedModuleId: this.props.item.running_module_id
+        selectedModule: item
       }
     });
   };

@@ -8,3 +8,7 @@
 .buttonsWrapper > * {
   margin-top: 5px;
 }
+
+.containerBtnAndDropdown {
+  position: relative;
+}

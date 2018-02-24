@@ -1,13 +1,18 @@
 import {
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
-  ALL_WEEKS_CHANGED
+  ALL_WEEKS_CHANGED,
+  ORIGINAL_DATA_CHANGED
 } from './';
 
 import {
   getAllTotalWeeksAndSundays,
   getTimelineItems,
-  setEndingDateForModules
+  setEndingDateForModules,
+  weekLonger,
+  weekShorter,
+  moveLeft,
+  moveRight
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -45,8 +50,18 @@ export default function() {
   };
 
   const fetchItems = () => {
+    console.log('here');
     getTimelineItems(BASE_URL + '/api/timeline')
       .then(res => {
+        const originalData = JSON.parse(JSON.stringify(res)); // deep clone hack
+        // set the state with the original data which will be used when a teacher wants to change something about a module (week longer.....)
+        setState({
+          type: ORIGINAL_DATA_CHANGED,
+          payload: {
+            originalData: originalData
+          }
+        });
+
         const groups = Object.keys(res);
         // set the state with the array of all current groups [maybe needed for sidecolumn group names]
         setState({
@@ -82,13 +97,41 @@ export default function() {
       .catch(err => console.log(err));
   };
 
+  const updateModule = (module, originalData, action) => {
+    let result = null;
+    switch (action) {
+      case 'weekLonger':
+        result = weekLonger(module, originalData);
+        break;
+      case 'weekShorter':
+        result = weekShorter(module, originalData);
+        break;
+      case 'moveLeft':
+        result = moveLeft(module, originalData);
+        break;
+      case 'moveRight':
+        result = moveRight(module, originalData);
+        break;
+      default:
+        break;
+    }
+
+    result
+      .then(() => {
+        console.log('success!!!');
+        fetchItems();
+      })
+      .catch(err => console.log(err));
+  };
+
   return {
     subscribe,
     unsubscribe,
     isSubscribed,
     getState,
     setState,
-    fetchItems
+    fetchItems,
+    updateModule
   };
 }
 

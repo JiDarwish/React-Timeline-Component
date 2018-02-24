@@ -1,0 +1,41 @@
+.dropdown {
+  position: absolute;
+  bottom: 0;
+  left: -200px;
+  width: 200px;
+}
+.dropdown > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  display: block;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 0.1px solid #f6f6f8;
+  background: rgb(255, 255, 255);
+  height: 50px;
+  line-height: 50px;
+  text-decoration: none;
+  transition: all 0.4s ease-in-out;
+  display: flex;
+  justify-content: space-around;
+}
+
+.listItem:hover {
+  background: lightgrey;
+}
+
+.symbol {
+  font-size: 1.4rem;
+}
+
+.disabled {
+  cursor: not-allowed;
+  color: lightgrey;
+}
+.disabled:hover {
+  background: rgb(255, 255, 255);
+}
