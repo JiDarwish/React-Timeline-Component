@@ -7,8 +7,7 @@ import { getCurrentWeek } from '../../util';
 export default class WeekComp extends Component {
   setTodayMarker = () => {
     const offset = getCurrentWeek(this.props.week, this.props.itemWidth);
-    if (!offset) return null;
-    // return null;
+    if (offset !== 0 || offset === null) return null;
     return <TodayMarker offset={offset} />;
   };
   render() {
