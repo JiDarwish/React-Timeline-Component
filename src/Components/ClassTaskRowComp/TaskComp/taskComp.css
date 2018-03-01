@@ -27,6 +27,7 @@
   transition: all 0.2s ease-out;
   margin: 5px;
   overflow: hidden;
+  z-index: 1;
   position: relative;
 }
 
@@ -36,7 +37,7 @@
   left: 0px;
   height: 100%;
   width: 5px;
-  background: rgba(0,0,0,.2);
+  background: rgba(0, 0, 0, 0.2);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
@@ -46,5 +47,6 @@
 }
 
 .flexWrapper.active {
-  /* transform: scale(1.25) rotate(5deg); */
+  transform: scale(1.15);
+  z-index: 2;
 }

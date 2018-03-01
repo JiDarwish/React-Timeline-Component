@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
 
 import classes from './todayMarker.css';
-import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../Store';
 
 export default class TodayMarker extends Component {
   componentDidMount = () => {
     const { todayMarker } = this.refs;
-    // todayMarker.parentNode.scrollIntoView();
-    let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
-    leftPos -= (window.innerWidth / 2);
-    let scrollEl = document.querySelector('.timeline__root__2BlbQ');
-    scrollEl.scrollLeft = leftPos;
-
-    window.scrollTo(leftPos,0);
-    timelineStore.setState({
-      type: TODAY_MARKER_REFERENCE,
-      payload: {
-        todayMarkerRef: todayMarker
-      }
-    });
+    this.props.setTodayMarkerRef(todayMarker);
+    todayMarker.parentNode.scrollIntoView();
+    // let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
+    // leftPos -= window.innerWidth / 2;
+    // console.log('this one', leftPos);
+    // let scrollEl = todayMarker.parentNode.parentNode.parentNode;
+    // scrollEl.scrollLeft = leftPos;
+    // window.scrollTo(leftPos, 0);
   };
 
   render() {

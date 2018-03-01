@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 
 import classes from './taskComp.css';
-import { timelineStore, SELECTED_MODULE_ID_CHANGED } from '../../../Store';
 
 export default class TaskComp extends Component {
   handleClick = e => {
     let item = this.props.item;
-    const selectedItemInStore = timelineStore.getState().selectedModule;
-    if (selectedItemInStore) {
-      // if the clicked module is the same on unselect it
-      if (item.running_module_id === selectedItemInStore.running_module_id) {
-        item = null;
-      }
-    }
-    timelineStore.setState({
-      type: SELECTED_MODULE_ID_CHANGED,
-      payload: {
-        selectedModule: item
-      }
-    });
+    this.props.clickHandler(e, item); // will call the provided click event to furthur change the state of the selected module
   };
 
   render() {
@@ -30,6 +17,7 @@ export default class TaskComp extends Component {
       color,
       git_url
     } = this.props.item;
+
     let { width, height, active } = this.props;
     if (duration > 1) {
       // add extra times width as much as needed but for the margin add all - 1 (for the first item it doesn't need any margin)
@@ -47,7 +35,11 @@ export default class TaskComp extends Component {
           className={className}
           style={{ backgroundColor: color }}
           title={module_name}
-          dataset={[git_url]}
+          data-url={git_url}
+          data-module_name={module_name}
+          data-starting_date={starting_date}
+          data-ending_date={ending_date}
+          data-duration={duration}
           onClick={this.handleClick}
         >
           <span>{module_name}</span>

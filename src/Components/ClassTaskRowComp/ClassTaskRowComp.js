@@ -22,6 +22,7 @@ export default class ClassTaskRowComp extends Component {
       }
       return (
         <TaskComp
+          clickHandler={this.props.clickHandler}
           active={active}
           key={item.starting_date}
           item={{ ...item }}

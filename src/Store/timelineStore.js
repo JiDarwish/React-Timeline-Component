@@ -50,7 +50,6 @@ export default function() {
   };
 
   const fetchItems = () => {
-    console.log('here');
     getTimelineItems(BASE_URL + '/api/timeline')
       .then(res => {
         const originalData = JSON.parse(JSON.stringify(res)); // deep clone hack
@@ -118,7 +117,6 @@ export default function() {
 
     result
       .then(() => {
-        console.log('success!!!');
         fetchItems();
       })
       .catch(err => console.log(err));

@@ -1,46 +1,41 @@
 import React, { Component } from 'react';
 
-import {
-  timelineStore,
-  TIMELINE_ITEMS_CHANGED,
-  TIMELINE_GROUPS_CHANGED,
-  ALL_WEEKS_CHANGED,
-  GROUPS_COLUMN_REFERENCE,
-  TODAY_MARKER_REFERENCE,
-  SELECTED_MODULE_ID_CHANGED,
-  ORIGINAL_DATA_CHANGED
-} from '../../Store';
+import { timelineStore, TODAY_MARKER_REFERENCE } from '../../Store';
 
 import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
 import Buttons from '../Buttons/Buttons';
 import classes from './timeline.css';
-const weekWidth = '125';
-const rowHeight = '60';
 
 export default class Timeline extends Component {
   state = {
-    originalData: null,
-    timelineItems: null,
-    groups: null,
-    allWeeks: null,
-    totalWeeks: null,
     groupsColumnRef: null,
-    todayMarkerRef: null,
-    selectedModule: null
+    todayMarkerRef: null
+  };
+
+  // passed down method for setting the groupsColumn ref
+  setGroupColumnsRef = ref => {
+    this.setState({ groupsColumnRef: ref });
+  };
+
+  // passed down method for setting the todayMarker ref
+  setTodayMarkerRef = ref => {
+    this.setState({ todayMarkerRef: ref });
   };
 
   renderWeekComp = () => {
-    if (!this.state.allWeeks) return null;
+    if (!this.props.allWeeks) return null;
+    const { rowHeight, itemWidth } = this.props;
     return (
       <div className={classes.rowContainer}>
-        {this.state.allWeeks.map(week => (
+        {this.props.allWeeks.map(week => (
           <WeekComp
+            setTodayMarkerRef={this.setTodayMarkerRef}
             key={week}
             week={week}
             rowHeight={rowHeight}
-            itemWidth={weekWidth}
+            itemWidth={itemWidth}
           />
         ))}
       </div>
@@ -49,22 +44,24 @@ export default class Timeline extends Component {
 
   renderTaskRowComp = () => {
     if (
-      !this.state.groups ||
-      !this.state.timelineItems ||
-      !this.state.allWeeks
+      !this.props.groups ||
+      !this.props.timelineItems ||
+      !this.props.allWeeks
     ) {
       return null;
     }
-    return this.state.groups.map(group => {
-      const items = this.state.timelineItems[group];
+    return this.props.groups.map(group => {
+      const items = this.props.timelineItems[group];
+      const { itemWidth, rowHeight } = this.props;
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
-            selectedModule={this.state.selectedModule}
+            selectedModule={this.props.selectedModule}
             items={items}
-            width={weekWidth}
+            width={itemWidth}
             height={rowHeight}
-            allWeeks={this.state.allWeeks}
+            allWeeks={this.props.allWeeks}
+            clickHandler={this.props.itemClickHandler}
           />
         </div>
       );
@@ -73,29 +70,8 @@ export default class Timeline extends Component {
 
   observer = mergedData => {
     switch (mergedData.type) {
-      case TIMELINE_ITEMS_CHANGED:
-        this.setState({ timelineItems: mergedData.payload.items });
-        break;
       case TODAY_MARKER_REFERENCE:
         this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
-        break;
-      case ORIGINAL_DATA_CHANGED:
-        this.setState({ originalData: mergedData.payload.originalData });
-        break;
-      case TIMELINE_GROUPS_CHANGED:
-        this.setState({ groups: mergedData.payload.groups });
-        break;
-      case GROUPS_COLUMN_REFERENCE:
-        this.setState({ groupsColumnRef: mergedData.payload.groupsColumnRef });
-        break;
-      case SELECTED_MODULE_ID_CHANGED:
-        this.setState({
-          selectedModule: mergedData.payload.selectedModule
-        });
-        break;
-      case ALL_WEEKS_CHANGED:
-        const { allWeeks } = mergedData.payload;
-        this.setState({ allWeeks: allWeeks, totalWeeks: allWeeks.length });
         break;
       default:
         break;
@@ -115,7 +91,6 @@ export default class Timeline extends Component {
   };
 
   handleClickTodayMarker = e => {
-    console.log('clickHandler');
     this.state.todayMarkerRef.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -135,24 +110,28 @@ export default class Timeline extends Component {
   };
 
   render() {
-    const { allWeeks } = this.state;
+    const { itemWidth, rowHeight, allWeeks } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
-      ? weekWidth * allWeeks.length + 21 * allWeeks.length + 'px'
+      ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
       <div className={classes.root} onScroll={this.handleScroll}>
         <div className={classes.timelineContainer} style={{ width: width }}>
           <div ref="buttonsContainer" className={classes.buttonsContainer}>
             <Buttons
-              originalData={this.state.originalData}
+              originalData={this.props.originalData}
               clickHandler={this.handleClickTodayMarker}
               isTeacher={true}
-              selectedModule={this.state.selectedModule}
+              selectedModule={this.props.selectedModule}
             />
           </div>
-          <ClassBarRowComp groups={this.state.groups} rowHeight={rowHeight} />
+          <ClassBarRowComp
+            setGroupColumnsRef={this.setGroupColumnsRef}
+            groups={this.props.groups}
+            rowHeight={rowHeight}
+          />
           <div className={classes.rowsContainer}>
             {this.renderWeekComp()}
             {this.renderTaskRowComp()}

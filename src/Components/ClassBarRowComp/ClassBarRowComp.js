@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import ClassRowComp from './ClassRowComp/ClassRowComp';
 import classes from './classBarRowComp.css';
-import { timelineStore, GROUPS_COLUMN_REFERENCE } from '../../Store';
 
 export default class ClassBarRowComp extends Component {
   renderAllRowComp = () => {
@@ -18,12 +17,7 @@ export default class ClassBarRowComp extends Component {
 
   componentDidMount = () => {
     // needed by parent's scroll event to make it stick to the left of the screen
-    timelineStore.setState({
-      type: GROUPS_COLUMN_REFERENCE,
-      payload: {
-        groupsColumnRef: this.refs.groupsRowContainer
-      }
-    });
+    this.props.setGroupColumnsRef(this.refs.groupsRowContainer);
   };
 
   render() {

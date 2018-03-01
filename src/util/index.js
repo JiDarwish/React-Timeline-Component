@@ -84,8 +84,7 @@ export function weekLonger(chosenModule, originalData) {
   toBeUpdatedModule.duration = ++toBeUpdatedModule.duration;
   console.log('plus a week', toBeUpdatedModule);
   // return _patchModules(originalData);
-  return Promise.resolve();// for now TODO:
-  
+  return Promise.resolve(); // for now TODO:
 }
 
 export function weekShorter(chosenModule, originalData) {
@@ -93,8 +92,7 @@ export function weekShorter(chosenModule, originalData) {
   toBeUpdatedModule.duration = --toBeUpdatedModule.duration;
   console.log('minus a week', toBeUpdatedModule);
   // return _patchModules(originalData);
-  return Promise.resolve();// for now TODO:
-  
+  return Promise.resolve(); // for now TODO:
 }
 
 export function moveRight(chosenModule, originalData) {
@@ -112,8 +110,7 @@ export function moveRight(chosenModule, originalData) {
   console.log('updated', toBeUpdatedModule.position);
   console.log('shifted', moduleAfter.position);
 
-  return Promise.resolve();// for now TODO:
-  
+  return Promise.resolve(); // for now TODO:
 }
 
 export function moveLeft(chosenModule, originalData) {
@@ -130,7 +127,7 @@ export function moveLeft(chosenModule, originalData) {
   console.log('updated', toBeUpdatedModule.position);
   console.log('shifted', moduleBefore.position);
   // return _patchModules(originalData);
-  return Promise.resolve();// for now TODO:
+  return Promise.resolve(); // for now TODO:
 }
 
 // helper functions

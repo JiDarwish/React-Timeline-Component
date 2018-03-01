@@ -7,19 +7,26 @@ import { getCurrentWeek } from '../../util';
 export default class WeekComp extends Component {
   setTodayMarker = () => {
     const offset = getCurrentWeek(this.props.week, this.props.itemWidth);
-    if (offset !== 0 || offset === null) return null;
-    return <TodayMarker offset={offset} />;
+    if (!offset) return null;
+    return (
+      <TodayMarker
+        setTodayMarkerRef={this.props.setTodayMarkerRef}
+        offset={offset}
+      />
+    );
   };
   render() {
     let [sunday1, sunday2] = this.props.week;
+    let nextSaturday = sunday2.clone().subtract(1, 'days'); // get the saturday before class of the week after this one
+
     let month;
-    if (sunday1.format('MMM') === sunday2.format('MMM')) {
+    if (sunday1.format('MMM') === nextSaturday.format('MMM')) {
       month = sunday1.format('MMM');
     } else {
-      month = `${sunday1.format('MMM')}/${sunday2.format('MMM')}`;
+      month = `${sunday1.format('MMM')}/${nextSaturday.format('MMM')}`;
     }
     sunday1 = sunday1.format('DD');
-    sunday2 = sunday2.format('DD');
+    nextSaturday = nextSaturday.format('DD');
     const { itemWidth, rowHeight } = this.props;
     const halfHeight = rowHeight / 2 + 'px';
 
@@ -38,7 +45,7 @@ export default class WeekComp extends Component {
         </span>
         <span style={{ height: halfHeight }} className={classes.daysContainer}>
           <span>{sunday1}</span>
-          <span>{sunday2}</span>
+          <span>{nextSaturday}</span>
         </span>
       </div>
     );
