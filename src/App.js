@@ -11,20 +11,19 @@ import {
   ORIGINAL_DATA_CHANGED
 } from './Store';
 
+import Dropdown from './Helpers/Dropdown/Dropdown.js';
+
 class App extends Component {
   state = {
     originalData: null,
     timelineItems: null,
     groups: null,
     allWeeks: null,
-    totalWeeks: null,
     todayMarkerRef: null,
     selectedModule: null
   };
 
   itemClickHandler(clickEvent, item) {
-    console.log('here');
-    console.log('clickEvent', clickEvent);
     const selectedItemInStore = timelineStore.getState().selectedModule;
     if (
       selectedItemInStore &&
@@ -62,7 +61,7 @@ class App extends Component {
         break;
       case ALL_WEEKS_CHANGED:
         const { allWeeks } = mergedData.payload;
-        this.setState({ allWeeks: allWeeks, totalWeeks: allWeeks.length });
+        this.setState({ allWeeks: allWeeks });
         break;
       default:
         break;
@@ -91,6 +90,13 @@ class App extends Component {
           selectedModule={this.state.selectedModule}
           itemClickHandler={this.itemClickHandler}
         />
+        <Dropdown isMenuShow={true}>
+          <li>
+            <button>I am a damn button</button>
+          </li>
+          <li>sdhfusefw</li>
+          <li>sdhfusefw</li>
+        </Dropdown>
       </div>
     );
   }

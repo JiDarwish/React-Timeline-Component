@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
+import DropdownList from '../DropdownList/DropdownList';
 import classes from './taskComp.css';
 
 export default class TaskComp extends Component {
-  handleClick = e => {
+  handleClickItem = e => {
     let item = this.props.item;
     this.props.clickHandler(e, item); // will call the provided click event to furthur change the state of the selected module
   };
@@ -26,6 +27,23 @@ export default class TaskComp extends Component {
     let className = classes.flexWrapper;
     if (active) className += ` ${classes.active}`;
 
+    let dropdownList = null;
+    if (
+      this.props.selectedModule &&
+      this.props.selectedModule.running_module_id ===
+        this.props.item.running_module_id
+    ) {
+      console.log('here yo');
+      dropdownList = (
+        <div className={classes.dropdownListContainer}>
+          <DropdownList
+            originalData={this.props.originalData}
+            selectedModule={this.props.selectedModule}
+          />
+        </div>
+      );
+    }
+
     return (
       <div
         className={classes.container}
@@ -40,12 +58,13 @@ export default class TaskComp extends Component {
           data-starting_date={starting_date}
           data-ending_date={ending_date}
           data-duration={duration}
-          onClick={this.handleClick}
+          onClick={this.handleClickItem}
         >
           <span>{module_name}</span>
           <span className={classes.dates}>
             {starting_date.format('DD MMMM')} - {ending_date.format('DD MMMM')}
           </span>
+          {dropdownList}
         </div>
       </div>
     );

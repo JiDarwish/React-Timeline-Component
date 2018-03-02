@@ -10,31 +10,39 @@ export default class DropdownList extends Component {
     isToggled: false
   };
 
-  toggleDropdown = () => {
+  toggleDropdown = e => {
+    e.stopPropagation();
     this.setState({ isToggled: !this.state.isToggled });
   };
 
-  weekLonger = () => {
+  weekLonger = e => {
+    e.stopPropagation();
     const { selectedModule, originalData } = this.props;
     timelineStore.updateModule(selectedModule, originalData, 'weekLonger');
   };
 
-  weekShorter = () => {
+  weekShorter = e => {
+    e.stopPropagation();
+
     const { selectedModule, originalData } = this.props;
     timelineStore.updateModule(selectedModule, originalData, 'weekShorter');
   };
 
-  moveLeft = () => {
+  moveLeft = e => {
+    e.stopPropagation();
+
     const { selectedModule, originalData } = this.props;
     timelineStore.updateModule(selectedModule, originalData, 'moveLeft');
   };
 
-  moveRight = () => {
+  moveRight = e => {
+    e.stopPropagation();
+
     const { selectedModule, originalData } = this.props;
     timelineStore.updateModule(selectedModule, originalData, 'moveRight');
   };
 
-  checkModuleIsLast: Boolean = () => {
+  checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const itemsAfter = this.props.originalData[group_name].filter(
       item => item.position > position
@@ -43,6 +51,7 @@ export default class DropdownList extends Component {
   };
 
   render() {
+    console.log('inside the render');
     let moveLeft = this.moveLeft;
     let moveRight = this.moveRight;
     let rightDisableClass = null;
@@ -56,13 +65,13 @@ export default class DropdownList extends Component {
       moveRight = null;
       rightDisableClass = classes.disabled;
     }
-    // not working
     return (
       <div>
         <RoundButton
           clickHandler={this.toggleDropdown}
           action="..."
           title="more info"
+          className={classes.dropdownToggeler}
         />
         <Dropdown isToggled={this.state.isToggled} className={classes.dropdown}>
           <ul>
@@ -97,7 +106,10 @@ export default class DropdownList extends Component {
               </span>
             </li>
             <li>
-              <span className={classes.listItem}>
+              <span
+                className={classes.listItem}
+                onClick={e => e.stopPropagation()}
+              >
                 <span
                   className={classes.symbol}
                   role="img"
@@ -109,7 +121,10 @@ export default class DropdownList extends Component {
               </span>
             </li>
             <li>
-              <span className={classes.listItem}>
+              <span
+                className={classes.listItem}
+                onClick={e => e.stopPropagation()}
+              >
                 <span className={classes.symbol}>🖊</span>
                 <span>More options</span>
               </span>

@@ -1,9 +1,20 @@
 .dropdown {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  left: -200px;
+  top: 0;
+  right: 30px;
   width: 200px;
+  z-index: 4;
+}
+.dropdownToggeler {
+  z-index: 20;
+  position: absolute;
+  transform: rotate(-90deg) !important;
+  background-color: transparent !important;
+
+  right: 0;
+}
+.dropdownToggeler:hover {
+  transform: rotate(-90deg) !important;
 }
 
 .dropdown > ul {
@@ -24,6 +35,7 @@
   transition: all 0.4s ease-in-out;
   display: flex;
   justify-content: space-around;
+  color: grey;
 }
 
 .listItem:hover {
@@ -40,9 +52,4 @@
 }
 .disabled:hover {
   background: rgb(255, 255, 255);
-}
-
-.alignMeToRight {
-  position: absolute;
-  right: 0;
 }

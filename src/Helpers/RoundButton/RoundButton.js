@@ -4,10 +4,14 @@ import classes from './roundButton.css';
 
 export default class ModuleButton extends Component {
   render() {
+    let className = classes.roundButton;
+    if (this.props.className) {
+      className += ` ${this.props.className}`;
+    }
     return (
       <button
         title={this.props.title}
-        className={classes.roundButton}
+        className={className}
         disabled={this.props.disabled}
         onClick={this.props.clickHandler}
       >

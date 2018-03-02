@@ -62,6 +62,7 @@ export default class Timeline extends Component {
             height={rowHeight}
             allWeeks={this.props.allWeeks}
             clickHandler={this.props.itemClickHandler}
+            originalData={this.props.originalData}
           />
         </div>
       );
@@ -121,10 +122,8 @@ export default class Timeline extends Component {
         <div className={classes.timelineContainer} style={{ width: width }}>
           <div ref="buttonsContainer" className={classes.buttonsContainer}>
             <Buttons
-              originalData={this.props.originalData}
               clickHandler={this.handleClickTodayMarker}
               isTeacher={true}
-              selectedModule={this.props.selectedModule}
             />
           </div>
           <ClassBarRowComp

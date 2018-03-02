@@ -1,24 +1,13 @@
 import React, { Component, Fragment } from 'react';
 
 import RoundButton from '../../Helpers/RoundButton/RoundButton';
-import Dropdown from '../../Helpers/Dropdown/Dropdown';
-import DropdownList from './DropdownList/DropdownList';
 import classes from './buttons.css';
 
 export default class Button extends Component {
   render() {
     let addGroupBtn = null;
-    let dropdownList = null;
-    const { isTeacher, selectedModule, originalData } = this.props;
+    const { isTeacher } = this.props;
     if (isTeacher) {
-      if (selectedModule) {
-        dropdownList = (
-          <DropdownList
-            selectedModule={selectedModule}
-            originalData={originalData}
-          />
-        );
-      }
       addGroupBtn = (
         <Fragment>
           <RoundButton
@@ -32,7 +21,6 @@ export default class Button extends Component {
     }
     return (
       <div className={classes.buttonsWrapper}>
-        {dropdownList}
         {addGroupBtn}
         <RoundButton
           clickHandler={this.props.clickHandler}

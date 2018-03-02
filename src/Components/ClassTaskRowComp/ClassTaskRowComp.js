@@ -28,6 +28,8 @@ export default class ClassTaskRowComp extends Component {
           item={{ ...item }}
           width={width}
           height={height}
+          selectedModule={selectedModule}
+          originalData={this.props.originalData}
         />
       );
     });
