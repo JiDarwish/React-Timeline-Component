@@ -56,7 +56,6 @@ export default class DropdownList extends Component {
 
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
-    console.log(this.props.allModules);
     const classModules = this.props.allModules.filter(
       module => module.group_name === group_name
     );

@@ -13,9 +13,6 @@ export default class Timeline extends Component {
     todayMarkerRef: null
   };
 
-  // passed down method for setting the groupsColumn ref
-
-  // passed down method for setting the todayMarker ref
   setTodayMarkerRef = ref => {
     this.setState({ todayMarkerRef: ref });
   };
@@ -122,30 +119,12 @@ export default class Timeline extends Component {
         </div>
         <div ref="buttonsContainer" className={classes.buttonsContainer}>
           <Buttons
+            groups={this.props.groups}
             clickHandler={this.handleClickTodayMarker}
             isTeacher={this.props.isTeacher}
           />
         </div>
-        <button onClick={test}>Run it and check network</button>
       </div>
     );
   }
 }
-
-const test = e => {
-  const body = {
-    // teacher1_id: 67
-    // teacher2_id: null,
-    // position: ,
-    duration: 2
-    // description: ''
-  };
-  fetch('http://localhost:3005/api/running/update/44/4', {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'Application/json' },
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(res => console.log('the response', res))
-    .catch(err => console.log(err));
-};

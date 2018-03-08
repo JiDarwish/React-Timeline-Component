@@ -173,7 +173,7 @@ export function assignTeachers(item, teacher1, teacher2) {
     teacher2_id
   };
 
-  // TODO: uncomment this
+  // TODO: uncomment thisrop
   // fetch(`${BASE_URL}/api/running/update/${groupId}/${position}`, {
   //   method: 'PATCH',
   //   headers: {

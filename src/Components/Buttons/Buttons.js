@@ -2,8 +2,17 @@ import React, { Component, Fragment } from 'react';
 
 import RoundButton from '../../Helpers/RoundButton/RoundButton';
 import classes from './buttons.css';
+import AddDropdownList from './AddDropdownList/AddDropdownList';
 
 export default class Button extends Component {
+  state = {
+    isToggled: false
+  };
+
+  toggleDropdown = e => {
+    this.setState({ isToggled: !this.state.isToggled });
+  };
+
   render() {
     let addGroupBtn = null;
     const { isTeacher } = this.props;
@@ -11,9 +20,13 @@ export default class Button extends Component {
       addGroupBtn = (
         <Fragment>
           <RoundButton
-            clickHandler={() => console.log('implemented when integrating')}
+            clickHandler={this.toggleDropdown}
             action="+"
             title="Add a class"
+          />
+          <AddDropdownList
+            groups={this.props.groups}
+            isToggled={this.state.isToggled}
           />
           <div className={classes.containerBtnAndDropdown} />
         </Fragment>

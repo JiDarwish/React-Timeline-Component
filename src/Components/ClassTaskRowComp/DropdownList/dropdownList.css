@@ -10,11 +10,7 @@
   position: absolute;
   transform: rotate(-90deg) !important;
   background-color: transparent !important;
-
   right: 0;
-}
-.dropdownToggeler:hover {
-  transform: rotate(-90deg) !important;
 }
 
 .dropdown > ul {
