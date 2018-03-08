@@ -135,12 +135,13 @@ export default class Timeline extends Component {
 
 const test = e => {
   const body = {
-    teacher1_id: 67
+    // teacher1_id: 67
     // teacher2_id: null,
-    // position: 0,
+    // position: ,
+    duration: 2
     // description: ''
   };
-  fetch('http://localhost:3005/api/running/update/44/0', {
+  fetch('http://localhost:3005/api/running/update/44/4', {
     method: 'PATCH',
     headers: { 'Content-Type': 'Application/json' },
     body: JSON.stringify(body)

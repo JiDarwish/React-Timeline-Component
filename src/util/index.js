@@ -79,73 +79,68 @@ export function getCurrentWeek(week, width) {
   return offset;
 }
 
-export function weekLonger(chosenModule, originalData) {
-  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
-  toBeUpdatedModule.duration = ++toBeUpdatedModule.duration;
-  console.log('plus a week', toBeUpdatedModule);
-  // return _patchModules(originalData);
-  return Promise.resolve(); // for now TODO:
+export function weekLonger(chosenModule) {
+  const { duration } = chosenModule;
+  const newDuration = duration + 1;
+  console.log('new duration', newDuration);
+  return _patchModules(chosenModule, null, newDuration);
 }
 
-export function weekShorter(chosenModule, originalData) {
-  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
-  toBeUpdatedModule.duration = --toBeUpdatedModule.duration;
-  console.log('minus a week', toBeUpdatedModule);
-  // return _patchModules(originalData);
-  return Promise.resolve(); // for now TODO:
+export function weekShorter(chosenModule) {
+  const { duration } = chosenModule;
+  const newDuration = duration - 1;
+  console.log('new duration', newDuration);
+  return _patchModules(chosenModule, null, newDuration);
 }
 
-export function moveRight(chosenModule, originalData) {
-  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
-  const indexModuleAfter =
-    originalData[chosenModule.group_name].indexOf(toBeUpdatedModule) + 1;
-  const moduleAfter = originalData[chosenModule.group_name][indexModuleAfter];
-
-  const temp = moduleAfter.position;
-
-  moduleAfter.position = toBeUpdatedModule.position;
-  toBeUpdatedModule.position = temp;
-
-  // return _patchModules(originalData);
-  console.log('updated', toBeUpdatedModule.position);
-  console.log('shifted', moduleAfter.position);
-
-  return Promise.resolve(); // for now TODO:
+export function moveRight(chosenModule) {
+  const { position } = chosenModule;
+  const newPosition = position + 1;
+  console.log('new position', newPosition);
+  return _patchModules(chosenModule, newPosition);
 }
 
-export function moveLeft(chosenModule, originalData) {
-  const toBeUpdatedModule = _extractModule(chosenModule, originalData);
-  const indexModuleBefore =
-    originalData[chosenModule.group_name].indexOf(toBeUpdatedModule) - 1;
-  const moduleBefore = originalData[chosenModule.group_name][indexModuleBefore];
-
-  const temp = moduleBefore.position;
-
-  moduleBefore.position = toBeUpdatedModule.position;
-  toBeUpdatedModule.position = temp;
-
-  console.log('updated', toBeUpdatedModule.position);
-  console.log('shifted', moduleBefore.position);
-  // return _patchModules(originalData);
-  return Promise.resolve(); // for now TODO:
+export function moveLeft(chosenModule) {
+  const { position } = chosenModule;
+  const newPosition = position - 1;
+  console.log('new position', newPosition);
+  return _patchModules(chosenModule, newPosition);
 }
 
 // helper functions
 
-function _extractModule(module, originalData) {
-  return originalData[module.group_name].filter(
-    item => item.running_module_id === module.running_module_id
-  )[0];
-}
+async function _patchModules(
+  item,
+  newPosition,
+  newDuration,
+  teacher1_id,
+  teacher2_id
+) {
+  // get all the groups to get the id of the group which items you're chainging
+  const groups = await fetch(`${BASE_URL}/api/groups`)
+    .then(res => res.json())
+    .catch(err => {
+      return console.log(err);
+    });
+  // we need position for request and group_name to filter the group id wanted
+  const { position, group_name } = item;
 
-function _patchModules(modules) {
-  return fetch(`${BASE_URL}/api/timeline`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(modules)
-  }).then(res => res.json());
+  const group_id = groups
+    .filter(group => group.group_name === group_name)
+    .map(group => group.id)[0];
+
+  const body = {
+    duration: newDuration,
+    position: newPosition,
+    teacher1_id,
+    teacher2_id
+  };
+  // return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
+  //   method: 'PATCH',
+  //   headers: { 'Content-Type': 'Application/json' },
+  //   body: JSON.stringify(body)
+  // }).then(res => res.json());
+  return Promise.resolve();
 }
 
 function _getAllWeeks(startingDate, endingDate) {
