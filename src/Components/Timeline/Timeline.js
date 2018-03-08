@@ -10,14 +10,10 @@ import classes from './timeline.css';
 
 export default class Timeline extends Component {
   state = {
-    groupsColumnRef: null,
     todayMarkerRef: null
   };
 
   // passed down method for setting the groupsColumn ref
-  setGroupColumnsRef = ref => {
-    this.setState({ groupsColumnRef: ref });
-  };
 
   // passed down method for setting the todayMarker ref
   setTodayMarkerRef = ref => {
@@ -32,6 +28,7 @@ export default class Timeline extends Component {
         {this.props.allWeeks.map(week => (
           <WeekComp
             setTodayMarkerRef={this.setTodayMarkerRef}
+            scrollingParentRef={this.refs.timelineWrapper}
             key={week}
             week={week}
             rowHeight={rowHeight}
@@ -79,20 +76,12 @@ export default class Timeline extends Component {
     }
   };
 
-  handleScroll = e => {
-    const { groupsColumnRef } = this.state;
-    const { scrollLeft, clientWidth } = e.target;
-    // I am setting this.state.... = but this is just a reference to an element
-    // scroll the groups row along
-    groupsColumnRef.style.left = scrollLeft + 'px';
-
-    //scroll the buttons along
-    this.refs.buttonsContainer.style.left =
-      scrollLeft + clientWidth - 70 + 'px';
-  };
-
   handleClickTodayMarker = e => {
-    this.state.todayMarkerRef.scrollIntoView({ behavior: 'smooth' });
+    const todayMarker = this.state.todayMarkerRef; // using refs instead of manipulatng DOM
+    let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
+    leftPos -= window.innerWidth / 2;
+    const scrollEl = this.refs.timelineWrapper; // using refs instead of manipulatng DOM
+    scrollEl.scrollLeft = leftPos;
   };
 
   componentWillMount = () => {
@@ -118,25 +107,45 @@ export default class Timeline extends Component {
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
-      <div className={classes.root} onScroll={this.handleScroll}>
-        <div className={classes.timelineContainer} style={{ width: width }}>
-          <div ref="buttonsContainer" className={classes.buttonsContainer}>
-            <Buttons
-              clickHandler={this.handleClickTodayMarker}
-              isTeacher={true}
-            />
-          </div>
-          <ClassBarRowComp
-            setGroupColumnsRef={this.setGroupColumnsRef}
-            groups={this.props.groups}
-            rowHeight={rowHeight}
-          />
-          <div className={classes.rowsContainer}>
-            {this.renderWeekComp()}
-            {this.renderTaskRowComp()}
+      <div>
+        <ClassBarRowComp groups={this.props.groups} rowHeight={rowHeight} />
+        <div
+          className={classes.root}
+          ref="timelineWrapper"
+          onScroll={this.handleScroll}
+        >
+          <div className={classes.timelineContainer} style={{ width: width }}>
+            <div className={classes.rowsContainer}>
+              {this.renderWeekComp()}
+              {this.renderTaskRowComp()}
+            </div>
           </div>
         </div>
+        <div ref="buttonsContainer" className={classes.buttonsContainer}>
+          <Buttons
+            clickHandler={this.handleClickTodayMarker}
+            isTeacher={this.props.isTeacher}
+          />
+        </div>
+        <button onClick={test}>Run it and check network</button>
       </div>
     );
   }
 }
+
+const test = e => {
+  const body = {
+    teacher1_id: 67
+    // teacher2_id: null,
+    // position: 0,
+    // description: ''
+  };
+  fetch('http://localhost:3005/api/running/update/44/0', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'Application/json' },
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(res => console.log('the response', res))
+    .catch(err => console.log(err));
+};

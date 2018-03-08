@@ -6,13 +6,11 @@ export default class TodayMarker extends Component {
   componentDidMount = () => {
     const { todayMarker } = this.refs;
     this.props.setTodayMarkerRef(todayMarker);
+    let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
+    leftPos -= window.innerWidth / 2;
+    const scrollEl = this.props.scrollingParentRef;
+    scrollEl.scrollLeft = leftPos;
     todayMarker.parentNode.scrollIntoView();
-    // let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
-    // leftPos -= window.innerWidth / 2;
-    // console.log('this one', leftPos);
-    // let scrollEl = todayMarker.parentNode.parentNode.parentNode;
-    // scrollEl.scrollLeft = leftPos;
-    // window.scrollTo(leftPos, 0);
   };
 
   render() {
@@ -21,7 +19,7 @@ export default class TodayMarker extends Component {
       <div
         ref="todayMarker"
         style={{ left: offset + 'px' }}
-        className={classes.todayMarker}
+        className={classes.todayMarker + ' todayMarker'}
       />
     );
   }

@@ -80,8 +80,9 @@ class App extends Component {
     return (
       <div className="App">
         <Timeline
-          itemWidth={125}
-          rowHeight={60}
+          itemWidth={170}
+          rowHeight={70}
+          isTeacher={true}
           originalData={this.state.originalData}
           timelineItems={this.state.timelineItems}
           groups={this.state.groups}
@@ -90,13 +91,6 @@ class App extends Component {
           selectedModule={this.state.selectedModule}
           itemClickHandler={this.itemClickHandler}
         />
-        <Dropdown isMenuShow={true}>
-          <li>
-            <button>I am a damn button</button>
-          </li>
-          <li>sdhfusefw</li>
-          <li>sdhfusefw</li>
-        </Dropdown>
       </div>
     );
   }

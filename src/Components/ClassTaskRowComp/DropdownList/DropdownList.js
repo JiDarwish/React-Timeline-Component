@@ -3,6 +3,13 @@ import React, { Component } from 'react';
 import classes from './dropdownList.css';
 import Dropdown from '../../../Helpers/Dropdown/Dropdown';
 import RoundButton from '../../../Helpers/RoundButton/RoundButton';
+import ballpointPen from './icons/ballpointPen.svg';
+import rightArrow1 from './icons/rightArrow1.svg';
+import rightArrow2 from './icons/rightArrow2.svg';
+import leftArrow1 from './icons/leftArrow1.svg';
+import leftArrow2 from './icons/leftArrow2.svg';
+import graduateCap from './icons/graduateCap.svg';
+
 import { timelineStore } from '../../../Store';
 
 export default class DropdownList extends Component {
@@ -23,7 +30,6 @@ export default class DropdownList extends Component {
 
   weekShorter = e => {
     e.stopPropagation();
-
     const { selectedModule, originalData } = this.props;
     timelineStore.updateModule(selectedModule, originalData, 'weekShorter');
   };
@@ -42,6 +48,12 @@ export default class DropdownList extends Component {
     timelineStore.updateModule(selectedModule, originalData, 'moveRight');
   };
 
+  assignTeachers = e => {
+    e.stopPropagation();
+    // display the modal within which a user gets to assign teachers to a module and give it the
+    timelineStore.handleAssignTeachers(this.props.selectedModule);
+  };
+
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const itemsAfter = this.props.originalData[group_name].filter(
@@ -51,7 +63,6 @@ export default class DropdownList extends Component {
   };
 
   render() {
-    console.log('inside the render');
     let moveLeft = this.moveLeft;
     let moveRight = this.moveRight;
     let rightDisableClass = null;
@@ -80,7 +91,9 @@ export default class DropdownList extends Component {
                 className={classes.listItem + ' ' + rightDisableClass}
                 onClick={moveRight}
               >
-                <span className={classes.symbol}>►</span>
+                <span className={classes.symbol}>
+                  <img src={rightArrow1} width="30px" alt="rightArrow1 icon" />
+                </span>
                 <span>Move right</span>
               </span>
             </li>
@@ -89,33 +102,32 @@ export default class DropdownList extends Component {
                 className={classes.listItem + ' ' + leftDisableClass}
                 onClick={moveLeft}
               >
-                <span className={classes.symbol}>◄</span>
+                <span className={classes.symbol}>
+                  <img src={leftArrow1} width="30px" alt="leftArrow1 icon" />
+                </span>
                 <span>Move left</span>
               </span>
             </li>
             <li>
               <span className={classes.listItem} onClick={this.weekLonger}>
-                <span className={classes.symbol}>⏭</span>
+                <span className={classes.symbol}>
+                  <img src={rightArrow2} width="30px" alt="rightArrow2 icon" />
+                </span>
                 <span>Week longer</span>
               </span>
             </li>
             <li>
               <span className={classes.listItem} onClick={this.weekShorter}>
-                <span className={classes.symbol}>⏮</span>
+                <span className={classes.symbol}>
+                  <img src={leftArrow2} width="30px" alt="leftArrow2 icon" />
+                </span>
                 <span>Week shorter</span>
               </span>
             </li>
             <li>
-              <span
-                className={classes.listItem}
-                onClick={e => e.stopPropagation()}
-              >
-                <span
-                  className={classes.symbol}
-                  role="img"
-                  aria-label="Graduation-cap"
-                >
-                  🎓
+              <span className={classes.listItem} onClick={this.assignTeachers}>
+                <span className={classes.symbol}>
+                  <img src={graduateCap} width="30px" alt="graduateCap icon" />
                 </span>
                 <span>Assign teachers</span>
               </span>
@@ -125,7 +137,13 @@ export default class DropdownList extends Component {
                 className={classes.listItem}
                 onClick={e => e.stopPropagation()}
               >
-                <span className={classes.symbol}>🖊</span>
+                <span className={classes.symbol}>
+                  <img
+                    src={ballpointPen}
+                    width="30px"
+                    alt="ballpointPen icon"
+                  />
+                </span>
                 <span>More options</span>
               </span>
             </li>

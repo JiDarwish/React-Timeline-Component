@@ -166,3 +166,25 @@ function _getAllWeeks(startingDate, endingDate) {
 
   return allWeeks;
 }
+
+// this is not used yet cause there's nothing shown to user to invoke it
+export function assignTeachers(item, teacher1, teacher2) {
+  const { groupId, position } = item;
+  const teacher1_id = teacher1 && teacher1.id;
+  const teacher2_id = teacher2 && teacher2.id;
+
+  const body = {
+    teacher1_id,
+    teacher2_id
+  };
+
+  // TODO: uncomment this
+  // fetch(`${BASE_URL}/api/running/update/${groupId}/${position}`, {
+  //   method: 'PATCH',
+  //   headers: {
+  //     'Content-Type': 'Application/json',
+  //   },
+  //   body: JSON.stringify(body);
+  // });
+  return Promise.resolve();
+}

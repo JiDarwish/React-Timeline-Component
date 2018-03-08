@@ -43,6 +43,9 @@ export default class TaskComp extends Component {
         </div>
       );
     }
+    const theStart = starting_date.clone();
+    theStart.add(2, 'hours');
+    // ending_date.subtract(1, )
 
     return (
       <div
@@ -62,7 +65,7 @@ export default class TaskComp extends Component {
         >
           <span>{module_name}</span>
           <span className={classes.dates}>
-            {starting_date.format('DD MMMM')} - {ending_date.format('DD MMMM')}
+            {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
           </span>
           {dropdownList}
         </div>

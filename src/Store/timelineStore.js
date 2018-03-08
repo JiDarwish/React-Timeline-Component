@@ -12,7 +12,8 @@ import {
   weekLonger,
   weekShorter,
   moveLeft,
-  moveRight
+  moveRight,
+  assignTeachers
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -122,6 +123,14 @@ export default function() {
       .catch(err => console.log(err));
   };
 
+  const handleAssignTeachers = (item, teacher1, teacher2) => {
+    assignTeachers(item, teacher1, teacher2)
+      // when done go back throught the whole procedure to get the items on screen
+      .then(() => {
+        fetchItems();
+        console.log('herer');
+      });
+  };
   return {
     subscribe,
     unsubscribe,
@@ -129,7 +138,8 @@ export default function() {
     getState,
     setState,
     fetchItems,
-    updateModule
+    updateModule,
+    handleAssignTeachers
   };
 }
 

@@ -11,6 +11,7 @@ export default class WeekComp extends Component {
     return (
       <TodayMarker
         setTodayMarkerRef={this.props.setTodayMarkerRef}
+        scrollingParentRef={this.props.scrollingParentRef}
         offset={offset}
       />
     );
@@ -44,8 +45,14 @@ export default class WeekComp extends Component {
           {month}
         </span>
         <span style={{ height: halfHeight }} className={classes.daysContainer}>
-          <span>{sunday1}</span>
-          <span>{nextSaturday}</span>
+          <div>
+            <span className={classes.dayName}>Sun </span>
+            <span>{sunday1}</span>
+          </div>
+          <div>
+            <span className={classes.dayName}>Sat </span>
+            <span>{nextSaturday}</span>
+          </div>
         </span>
       </div>
     );
