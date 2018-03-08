@@ -48,12 +48,6 @@ export default class DropdownList extends Component {
     timelineStore.updateModule(selectedModule, 'moveRight');
   };
 
-  assignTeachers = e => {
-    e.stopPropagation();
-    // display the modal within which a user gets to assign teachers to a module and give it the
-    timelineStore.handleAssignTeachers(this.props.selectedModule);
-  };
-
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const classModules = this.props.allModules.filter(
@@ -87,65 +81,44 @@ export default class DropdownList extends Component {
         />
         <Dropdown isToggled={this.state.isToggled} className={classes.dropdown}>
           <ul>
-            <li>
-              <span
-                className={classes.listItem + ' ' + rightDisableClass}
-                onClick={moveRight}
-              >
+            <li onClick={moveRight}>
+              <span className={classes.listItem + ' ' + rightDisableClass}>
                 <span className={classes.symbol}>
                   <img src={rightArrow1} width="30px" alt="rightArrow1 icon" />
                 </span>
                 <span>Move right</span>
               </span>
             </li>
-            <li>
-              <span
-                className={classes.listItem + ' ' + leftDisableClass}
-                onClick={moveLeft}
-              >
+            <li onClick={moveLeft}>
+              <span className={classes.listItem + ' ' + leftDisableClass}>
                 <span className={classes.symbol}>
                   <img src={leftArrow1} width="30px" alt="leftArrow1 icon" />
                 </span>
                 <span>Move left</span>
               </span>
             </li>
-            <li>
-              <span className={classes.listItem} onClick={this.weekLonger}>
+            <li onClick={this.weekLonger}>
+              <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={rightArrow2} width="30px" alt="rightArrow2 icon" />
                 </span>
                 <span>Week longer</span>
               </span>
             </li>
-            <li>
-              <span className={classes.listItem} onClick={this.weekShorter}>
+            <li onClick={this.weekShorter}>
+              <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={leftArrow2} width="30px" alt="leftArrow2 icon" />
                 </span>
                 <span>Week shorter</span>
               </span>
             </li>
-            <li>
-              <span className={classes.listItem} onClick={this.assignTeachers}>
+            <li onClick={this.props.showModal}>
+              <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={graduateCap} width="30px" alt="graduateCap icon" />
                 </span>
                 <span>Assign teachers</span>
-              </span>
-            </li>
-            <li>
-              <span
-                className={classes.listItem}
-                onClick={e => e.stopPropagation()}
-              >
-                <span className={classes.symbol}>
-                  <img
-                    src={ballpointPen}
-                    width="30px"
-                    alt="ballpointPen icon"
-                  />
-                </span>
-                <span>More options</span>
               </span>
             </li>
           </ul>

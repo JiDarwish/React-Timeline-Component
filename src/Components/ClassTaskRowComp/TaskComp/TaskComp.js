@@ -2,8 +2,23 @@ import React, { Component } from 'react';
 
 import DropdownList from '../DropdownList/DropdownList';
 import classes from './taskComp.css';
+import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
+import { timelineStore } from '../../../Store';
 
 export default class TaskComp extends Component {
+  state = {
+    assignTeacherModalIsToggled: false
+  };
+
+  showAssignTeacherModal = e => {
+    e.stopPropagation();
+    this.setState({ assignTeacherModalIsToggled: true });
+  };
+
+  hideAssignTeacherModal = () => {
+    this.setState({ assignTeacherModalIsToggled: false });
+  };
+
   handleClickItem = e => {
     let item = this.props.item;
     this.props.clickHandler(e, item); // will call the provided click event to furthur change the state of the selected module
@@ -36,6 +51,7 @@ export default class TaskComp extends Component {
       dropdownList = (
         <div className={classes.dropdownListContainer}>
           <DropdownList
+            showModal={this.showAssignTeacherModal}
             selectedModule={this.props.selectedModule}
             allModules={this.props.allModules}
           />
@@ -47,26 +63,34 @@ export default class TaskComp extends Component {
     // ending_date.subtract(1, )
 
     return (
-      <div
-        className={classes.container}
-        style={{ width: width + 'px', height: height + 'px' }}
-      >
+      <div>
+        <AssignTeacherModal
+          visible={this.state.assignTeacherModalIsToggled}
+          selectedModule={this.props.selectedModule}
+          assignTeachersFunc={timelineStore.handleAssignTeachers}
+          closeModal={this.hideAssignTeacherModal}
+        />
         <div
-          className={className}
-          style={{ backgroundColor: color }}
-          title={module_name}
-          data-url={git_url}
-          data-module_name={module_name}
-          data-starting_date={starting_date}
-          data-ending_date={ending_date}
-          data-duration={duration}
-          onClick={this.handleClickItem}
+          className={classes.container}
+          style={{ width: width + 'px', height: height + 'px' }}
         >
-          <span>{module_name}</span>
-          <span className={classes.dates}>
-            {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
-          </span>
-          {dropdownList}
+          <div
+            className={className}
+            style={{ backgroundColor: color }}
+            title={module_name}
+            data-url={git_url}
+            data-module_name={module_name}
+            data-starting_date={starting_date}
+            data-ending_date={ending_date}
+            data-duration={duration}
+            onClick={this.handleClickItem}
+          >
+            <span>{module_name}</span>
+            <span className={classes.dates}>
+              {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
+            </span>
+            {dropdownList}
+          </div>
         </div>
       </div>
     );

@@ -183,3 +183,20 @@ export function assignTeachers(item, teacher1, teacher2) {
   // });
   return Promise.resolve();
 }
+
+export function addNewClass(className, starting_date) {
+  const date = new Date(starting_date);
+  const body = {
+    group_name: className,
+    starting_date: date.toISOString()
+  };
+
+  // return fetch(`${BASE_URL}/api/groups`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'Application/json'
+  //   },
+  //   body: JSON.stringify(body)
+  // }).then(res => res.json());
+  return Promise.resolve();
+}

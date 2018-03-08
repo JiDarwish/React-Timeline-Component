@@ -4,7 +4,7 @@ import classes from './modal.css';
 export default class ModalDialog extends Component {
   handleClickBackdrop = e => {
     e.stopPropagation();
-    if (!e.target.classList.contains(classes.popup)) {
+    if (e.target.classList.contains(classes.overlay)) {
       this.props.closeModal();
     }
   };

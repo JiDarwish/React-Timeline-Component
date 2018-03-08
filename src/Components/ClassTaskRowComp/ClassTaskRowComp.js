@@ -22,6 +22,7 @@ export default class ClassTaskRowComp extends Component {
       }
       return (
         <TaskComp
+          groups={this.props.groups}
           clickHandler={this.props.clickHandler}
           active={active}
           key={item.starting_date}

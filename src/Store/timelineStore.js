@@ -12,7 +12,8 @@ import {
   weekShorter,
   moveLeft,
   moveRight,
-  assignTeachers
+  assignTeachers,
+  addNewClass
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -121,6 +122,10 @@ export default function() {
         console.log('herer');
       });
   };
+
+  const addTheClass = (className, starting_date) => {
+    return addNewClass(className, starting_date);
+  };
   return {
     subscribe,
     unsubscribe,
@@ -129,6 +134,7 @@ export default function() {
     setState,
     fetchItems,
     updateModule,
+    addTheClass,
     handleAssignTeachers
   };
 }
