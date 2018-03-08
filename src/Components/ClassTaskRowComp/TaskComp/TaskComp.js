@@ -33,12 +33,11 @@ export default class TaskComp extends Component {
       this.props.selectedModule.running_module_id ===
         this.props.item.running_module_id
     ) {
-      console.log('here yo');
       dropdownList = (
         <div className={classes.dropdownListContainer}>
           <DropdownList
-            originalData={this.props.originalData}
             selectedModule={this.props.selectedModule}
+            allModules={this.props.allModules}
           />
         </div>
       );

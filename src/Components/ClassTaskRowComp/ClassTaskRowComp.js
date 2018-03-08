@@ -26,10 +26,10 @@ export default class ClassTaskRowComp extends Component {
           active={active}
           key={item.starting_date}
           item={{ ...item }}
+          allModules={items}
           width={width}
           height={height}
           selectedModule={selectedModule}
-          originalData={this.props.originalData}
         />
       );
     });

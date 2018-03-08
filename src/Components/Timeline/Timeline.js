@@ -59,7 +59,6 @@ export default class Timeline extends Component {
             height={rowHeight}
             allWeeks={this.props.allWeeks}
             clickHandler={this.props.itemClickHandler}
-            originalData={this.props.originalData}
           />
         </div>
       );

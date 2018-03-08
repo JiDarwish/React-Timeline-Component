@@ -24,28 +24,28 @@ export default class DropdownList extends Component {
 
   weekLonger = e => {
     e.stopPropagation();
-    const { selectedModule, originalData } = this.props;
-    timelineStore.updateModule(selectedModule, originalData, 'weekLonger');
+    const { selectedModule } = this.props;
+    timelineStore.updateModule(selectedModule, 'weekLonger');
   };
 
   weekShorter = e => {
     e.stopPropagation();
-    const { selectedModule, originalData } = this.props;
-    timelineStore.updateModule(selectedModule, originalData, 'weekShorter');
+    const { selectedModule } = this.props;
+    timelineStore.updateModule(selectedModule, 'weekShorter');
   };
 
   moveLeft = e => {
     e.stopPropagation();
 
-    const { selectedModule, originalData } = this.props;
-    timelineStore.updateModule(selectedModule, originalData, 'moveLeft');
+    const { selectedModule } = this.props;
+    timelineStore.updateModule(selectedModule, 'moveLeft');
   };
 
   moveRight = e => {
     e.stopPropagation();
 
-    const { selectedModule, originalData } = this.props;
-    timelineStore.updateModule(selectedModule, originalData, 'moveRight');
+    const { selectedModule } = this.props;
+    timelineStore.updateModule(selectedModule, 'moveRight');
   };
 
   assignTeachers = e => {
@@ -56,9 +56,11 @@ export default class DropdownList extends Component {
 
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
-    const itemsAfter = this.props.originalData[group_name].filter(
-      item => item.position > position
+    console.log(this.props.allModules);
+    const classModules = this.props.allModules.filter(
+      module => module.group_name === group_name
     );
+    const itemsAfter = classModules.filter(item => item.position > position);
     return itemsAfter.length === 0;
   };
 

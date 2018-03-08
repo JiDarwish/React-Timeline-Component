@@ -7,15 +7,13 @@ import {
   TIMELINE_GROUPS_CHANGED,
   ALL_WEEKS_CHANGED,
   TODAY_MARKER_REFERENCE,
-  SELECTED_MODULE_ID_CHANGED,
-  ORIGINAL_DATA_CHANGED
+  SELECTED_MODULE_ID_CHANGED
 } from './Store';
 
 import Dropdown from './Helpers/Dropdown/Dropdown.js';
 
 class App extends Component {
   state = {
-    originalData: null,
     timelineItems: null,
     groups: null,
     allWeeks: null,
@@ -47,9 +45,6 @@ class App extends Component {
         break;
       case TODAY_MARKER_REFERENCE:
         this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
-        break;
-      case ORIGINAL_DATA_CHANGED:
-        this.setState({ originalData: mergedData.payload.originalData });
         break;
       case TIMELINE_GROUPS_CHANGED:
         this.setState({ groups: mergedData.payload.groups });
@@ -83,7 +78,6 @@ class App extends Component {
           itemWidth={170}
           rowHeight={70}
           isTeacher={true}
-          originalData={this.state.originalData}
           timelineItems={this.state.timelineItems}
           groups={this.state.groups}
           allWeeks={this.state.allWeeks}

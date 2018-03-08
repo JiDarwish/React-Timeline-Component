@@ -1,8 +1,7 @@
 import {
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
-  ALL_WEEKS_CHANGED,
-  ORIGINAL_DATA_CHANGED
+  ALL_WEEKS_CHANGED
 } from './';
 
 import {
@@ -53,15 +52,6 @@ export default function() {
   const fetchItems = () => {
     getTimelineItems(BASE_URL + '/api/timeline')
       .then(res => {
-        const originalData = JSON.parse(JSON.stringify(res)); // deep clone hack
-        // set the state with the original data which will be used when a teacher wants to change something about a module (week longer.....)
-        setState({
-          type: ORIGINAL_DATA_CHANGED,
-          payload: {
-            originalData: originalData
-          }
-        });
-
         const groups = Object.keys(res);
         // set the state with the array of all current groups [maybe needed for sidecolumn group names]
         setState({
@@ -97,20 +87,20 @@ export default function() {
       .catch(err => console.log(err));
   };
 
-  const updateModule = (module, originalData, action) => {
+  const updateModule = (module, action) => {
     let result = null;
     switch (action) {
       case 'weekLonger':
-        result = weekLonger(module, originalData);
+        result = weekLonger(module);
         break;
       case 'weekShorter':
-        result = weekShorter(module, originalData);
+        result = weekShorter(module);
         break;
       case 'moveLeft':
-        result = moveLeft(module, originalData);
+        result = moveLeft(module);
         break;
       case 'moveRight':
-        result = moveRight(module, originalData);
+        result = moveRight(module);
         break;
       default:
         break;
