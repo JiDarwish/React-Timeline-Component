@@ -55,7 +55,7 @@ export default class Timeline extends Component {
             width={itemWidth}
             height={rowHeight}
             allWeeks={this.props.allWeeks}
-            clickHandler={this.props.itemClickHandler}
+            hoverHandler={this.props.itemHoverHandler}
           />
         </div>
       );

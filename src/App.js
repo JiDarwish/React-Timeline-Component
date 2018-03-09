@@ -10,8 +10,6 @@ import {
   SELECTED_MODULE_ID_CHANGED
 } from './Store';
 
-import Dropdown from './Helpers/Dropdown/Dropdown.js';
-
 class App extends Component {
   state = {
     timelineItems: null,
@@ -21,11 +19,12 @@ class App extends Component {
     selectedModule: null
   };
 
-  itemClickHandler(clickEvent, item) {
+  itemHoverHandler(clickEvent, item) {
     const selectedItemInStore = timelineStore.getState().selectedModule;
     if (
-      selectedItemInStore &&
-      item.running_module_id === selectedItemInStore.running_module_id
+      !item ||
+      (selectedItemInStore &&
+        item.running_module_id === selectedItemInStore.running_module_id)
     ) {
       // if the clicked module is the same on unselect it
       item = null;
@@ -83,7 +82,7 @@ class App extends Component {
           allWeeks={this.state.allWeeks}
           totalWeeks={this.state.totalWeeks}
           selectedModule={this.state.selectedModule}
-          itemClickHandler={this.itemClickHandler}
+          itemHoverHandler={this.itemHoverHandler}
         />
       </div>
     );

@@ -3,7 +3,10 @@ import Modal from '../../../../Helpers/Modal/Modal';
 
 export default class AddNewModuleModal extends Component {
   render() {
-    console.log('I got the groups make a dropdownList', this.props.groups);
+    // console.log(
+    //   'I got the groups make a dropdownList to select from',
+    //   this.props.groups
+    // );
     return (
       <div>
         <Modal

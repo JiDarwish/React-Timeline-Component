@@ -79,49 +79,73 @@ export function getCurrentWeek(week, width) {
   return offset;
 }
 
-export function weekLonger(chosenModule) {
+export function weekLonger(chosenModule, groups) {
   const { duration } = chosenModule;
   const newDuration = duration + 1;
   console.log('new duration', newDuration);
-  return _patchModules(chosenModule, null, newDuration);
+  return _patchGroupsModules(
+    chosenModule,
+    null,
+    newDuration,
+    null,
+    null,
+    groups
+  );
 }
 
-export function weekShorter(chosenModule) {
+export function weekShorter(chosenModule, groups) {
   const { duration } = chosenModule;
   const newDuration = duration - 1;
   console.log('new duration', newDuration);
-  return _patchModules(chosenModule, null, newDuration);
+  return _patchGroupsModules(
+    chosenModule,
+    null,
+    newDuration,
+    null,
+    null,
+    groups
+  );
 }
 
-export function moveRight(chosenModule) {
+export function moveRight(chosenModule, groups) {
   const { position } = chosenModule;
   const newPosition = position + 1;
   console.log('new position', newPosition);
-  return _patchModules(chosenModule, newPosition);
+  return _patchGroupsModules(
+    chosenModule,
+    newPosition,
+    null,
+    null,
+    null,
+    groups
+  );
 }
 
-export function moveLeft(chosenModule) {
+export function moveLeft(chosenModule, groups) {
+  console.log(groups);
   const { position } = chosenModule;
   const newPosition = position - 1;
   console.log('new position', newPosition);
-  return _patchModules(chosenModule, newPosition);
+  return _patchGroupsModules(
+    chosenModule,
+    newPosition,
+    null,
+    null,
+    null,
+    groups
+  );
 }
 
 // helper functions
 
-async function _patchModules(
+function _patchGroupsModules(
   item,
   newPosition,
   newDuration,
   teacher1_id,
-  teacher2_id
+  teacher2_id,
+  groups
 ) {
-  // get all the groups to get the id of the group which items you're chainging
-  const groups = await fetch(`${BASE_URL}/api/groups`)
-    .then(res => res.json())
-    .catch(err => {
-      return console.log(err);
-    });
   // we need position for request and group_name to filter the group id wanted
   const { position, group_name } = item;
 
@@ -163,24 +187,10 @@ function _getAllWeeks(startingDate, endingDate) {
 }
 
 // this is not used yet cause there's nothing shown to user to invoke it
-export function assignTeachers(item, teacher1, teacher2) {
-  const { groupId, position } = item;
-  const teacher1_id = teacher1 && teacher1.id;
-  const teacher2_id = teacher2 && teacher2.id;
-
-  const body = {
-    teacher1_id,
-    teacher2_id
-  };
-
-  // TODO: uncomment thisrop
-  // fetch(`${BASE_URL}/api/running/update/${groupId}/${position}`, {
-  //   method: 'PATCH',
-  //   headers: {
-  //     'Content-Type': 'Application/json',
-  //   },
-  //   body: JSON.stringify(body);
-  // });
+export function assignTeachers(item, groups, teacher1, teacher2) {
+  const teacher1_id = teacher1 ? teacher1.id : null;
+  const teacher2_id = teacher2 ? teacher2.id : null;
+  // return _patchGroupsModules(item, null, null, teacher1_id, teacher2_id, groups);
   return Promise.resolve();
 }
 

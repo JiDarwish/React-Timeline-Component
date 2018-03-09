@@ -61,9 +61,7 @@ export default function() {
             groups
           }
         });
-
         const withEndingDate = setEndingDateForModules(res, groups);
-
         // set the state with the new received items
         setState({
           type: TIMELINE_ITEMS_CHANGED,
@@ -92,16 +90,16 @@ export default function() {
     let result = null;
     switch (action) {
       case 'weekLonger':
-        result = weekLonger(module);
+        result = weekLonger(module, getState().groups);
         break;
       case 'weekShorter':
-        result = weekShorter(module);
+        result = weekShorter(module, getState().groups);
         break;
       case 'moveLeft':
-        result = moveLeft(module);
+        result = moveLeft(module, getState().groups);
         break;
       case 'moveRight':
-        result = moveRight(module);
+        result = moveRight(module, getState().groups);
         break;
       default:
         break;
@@ -115,7 +113,8 @@ export default function() {
   };
 
   const handleAssignTeachers = (item, teacher1, teacher2) => {
-    assignTeachers(item, teacher1, teacher2)
+    const groups = getState().groups;
+    assignTeachers(item, groups, teacher1, teacher2)
       // when done go back throught the whole procedure to get the items on screen
       .then(() => {
         fetchItems();

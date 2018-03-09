@@ -7,7 +7,8 @@ import { timelineStore } from '../../../Store';
 
 export default class TaskComp extends Component {
   state = {
-    assignTeacherModalIsToggled: false
+    assignTeacherModalIsToggled: false,
+    dontChangeSelectedItem: false
   };
 
   showAssignTeacherModal = e => {
@@ -19,9 +20,18 @@ export default class TaskComp extends Component {
     this.setState({ assignTeacherModalIsToggled: false });
   };
 
-  handleClickItem = e => {
-    let item = this.props.item;
-    this.props.clickHandler(e, item); // will call the provided click event to furthur change the state of the selected module
+  handleHoverItem = e => {
+    if (!this.state.dontChangeSelectedItem) {
+      console.log('hover');
+      let item = this.props.item;
+      this.props.hoverHandler(e, item); // will call the provided hover event to furthur change the state of the selected module
+      this.setState({ dontChangeSelectedItem: true });
+    }
+  };
+
+  handleNotSelected = e => {
+    this.props.hoverHandler(e, null); // when the mouse leaves we remove stop showing options
+    this.setState({ dontChangeSelectedItem: false });
   };
 
   render() {
@@ -83,7 +93,8 @@ export default class TaskComp extends Component {
             data-starting_date={starting_date}
             data-ending_date={ending_date}
             data-duration={duration}
-            onClick={this.handleClickItem}
+            onMouseOver={this.handleHoverItem}
+            onMouseLeave={this.handleNotSelected}
           >
             <span>{module_name}</span>
             <span className={classes.dates}>
