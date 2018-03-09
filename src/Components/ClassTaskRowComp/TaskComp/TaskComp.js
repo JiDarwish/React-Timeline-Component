@@ -96,10 +96,11 @@ export default class TaskComp extends Component {
             onMouseOver={this.handleHoverItem}
             onMouseLeave={this.handleNotSelected}
           >
-            <span>{module_name}</span>
-            <span className={classes.dates}>
-              {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
-            </span>
+            <div className='taskComp__inner'>
+              <p className='taskComp__info'>{module_name}</p>
+              <p className={classes.dates + ' taskComp__info'}>{theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}</p>
+            </div>
+
             {dropdownList}
           </div>
         </div>
