@@ -25,6 +25,7 @@
   /* overflow: hidden; */
   z-index: 1;
   position: relative;
+  height: 40px;
 }
 
 .flexWrapper::before {
@@ -38,12 +39,26 @@
   border-bottom-left-radius: 5px;
 }
 
+.flexWrapper p {
+  position: absolute;
+  width: max-content;
+}
+.flexWrapper p:first-child {
+  top: -8px;
+
+}
+
+.flexWrapper p:last-child {
+  bottom: -8px;
+  font-size: 14px;
+}
+
 .flexWrapper:hover {
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
 }
 
 .flexWrapper.active {
-  transform: scale(1.15);
+  /* transform: scale(1.15); */
   z-index: 2;
 }
 

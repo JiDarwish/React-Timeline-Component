@@ -85,10 +85,11 @@ export default class TaskComp extends Component {
             data-duration={duration}
             onClick={this.handleClickItem}
           >
-            <span>{module_name}</span>
-            <span className={classes.dates}>
-              {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
-            </span>
+            <div className='taskComp__inner'>
+              <p className='taskComp__info'>{module_name}</p>
+              <p className={classes.dates + ' taskComp__info'}>{theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}</p>
+            </div>
+
             {dropdownList}
           </div>
         </div>

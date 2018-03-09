@@ -84,7 +84,7 @@ export default class DropdownList extends Component {
             <li onClick={moveRight}>
               <span className={classes.listItem + ' ' + rightDisableClass}>
                 <span className={classes.symbol}>
-                  <img src={rightArrow1} width="30px" alt="rightArrow1 icon" />
+                  <img src={rightArrow1} alt="rightArrow1 icon" />
                 </span>
                 <span>Move right</span>
               </span>
@@ -92,7 +92,7 @@ export default class DropdownList extends Component {
             <li onClick={moveLeft}>
               <span className={classes.listItem + ' ' + leftDisableClass}>
                 <span className={classes.symbol}>
-                  <img src={leftArrow1} width="30px" alt="leftArrow1 icon" />
+                  <img src={leftArrow1} alt="leftArrow1 icon" />
                 </span>
                 <span>Move left</span>
               </span>
@@ -100,7 +100,7 @@ export default class DropdownList extends Component {
             <li onClick={this.weekLonger}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
-                  <img src={rightArrow2} width="30px" alt="rightArrow2 icon" />
+                  <img src={rightArrow2} alt="rightArrow2 icon" />
                 </span>
                 <span>Week longer</span>
               </span>
@@ -108,7 +108,7 @@ export default class DropdownList extends Component {
             <li onClick={this.weekShorter}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
-                  <img src={leftArrow2} width="30px" alt="leftArrow2 icon" />
+                  <img src={leftArrow2} alt="leftArrow2 icon" />
                 </span>
                 <span>Week shorter</span>
               </span>
@@ -116,7 +116,7 @@ export default class DropdownList extends Component {
             <li onClick={this.props.showModal}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
-                  <img src={graduateCap} width="30px" alt="graduateCap icon" />
+                  <img src={graduateCap} alt="graduateCap icon" />
                 </span>
                 <span>Assign teachers</span>
               </span>
