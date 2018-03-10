@@ -55,7 +55,7 @@ export default class Timeline extends Component {
             width={itemWidth}
             height={rowHeight}
             allWeeks={this.props.allWeeks}
-            hoverHandler={this.props.itemHoverHandler}
+            itemClickHandler={this.props.itemClickHandler}
           />
         </div>
       );
@@ -96,7 +96,7 @@ export default class Timeline extends Component {
   };
 
   render() {
-    const { itemWidth, rowHeight, allWeeks } = this.props;
+    const { itemWidth, rowHeight, allWeeks, allModules } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
@@ -120,6 +120,9 @@ export default class Timeline extends Component {
         <div ref="buttonsContainer" className={classes.buttonsContainer}>
           <Buttons
             groups={this.props.groups}
+            groupsWithIds={this.props.groupsWithIds}
+            items={this.props.timelineItems}
+            modules={this.props.allModules}
             clickHandler={this.handleClickTodayMarker}
             isTeacher={this.props.isTeacher}
           />

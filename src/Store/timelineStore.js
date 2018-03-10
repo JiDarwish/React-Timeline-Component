@@ -1,7 +1,10 @@
 import {
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
-  ALL_WEEKS_CHANGED
+  ALL_WEEKS_CHANGED,
+  ALL_POSSIBLE_MODULES_CHANGED,
+  ALL_SUNDAYS_CHANGED,
+  GROUPS_WITH_IDS_CHANGED
 } from './';
 
 import {
@@ -13,7 +16,10 @@ import {
   moveLeft,
   moveRight,
   assignTeachers,
-  addNewClass
+  addNewClass,
+  getALlPossibleModules,
+  addNewModuleToClass,
+  getAllGroupsWithIds
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -50,40 +56,70 @@ export default function() {
     return _data;
   };
 
-  const fetchItems = () => {
-    getTimelineItems(BASE_URL + '/api/timeline')
-      .then(res => {
-        const groups = Object.keys(res);
-        // set the state with the array of all current groups [maybe needed for sidecolumn group names]
-        setState({
-          type: TIMELINE_GROUPS_CHANGED,
-          payload: {
-            groups
-          }
-        });
-        const withEndingDate = setEndingDateForModules(res, groups);
-        // set the state with the new received items
-        setState({
-          type: TIMELINE_ITEMS_CHANGED,
-          payload: {
-            items: withEndingDate
-          }
-        });
+  const fetchItems = async () => {
+    const timelineItems = await getTimelineItems(
+      BASE_URL + '/api/timeline'
+    ).catch(err => console.log(err));
 
-        // get all sundays and count how many weeks
-        const allWeeks = getAllTotalWeeksAndSundays(withEndingDate);
+    // set the state with the array of all current groups [maybe needed for sidecolumn group names]
+    const groups = Object.keys(timelineItems);
+    setState({
+      type: TIMELINE_GROUPS_CHANGED,
+      payload: {
+        // TODO:
+        groups
+      }
+    });
 
-        // Set state with all sunday moments
-        setState({
-          type: ALL_WEEKS_CHANGED,
-          payload: {
-            allWeeks
-          }
-        });
+    const groupsWithIds = await getAllGroupsWithIds();
 
-        // set state with total weeks during all known schedule for current classes
-      })
-      .catch(err => console.log(err));
+    setState({
+      type: GROUPS_WITH_IDS_CHANGED,
+      payload: {
+        groupsWithIds
+      }
+    });
+
+    const withEndingDate = setEndingDateForModules(timelineItems, groups); // group names
+    // set the state with the new received items
+    setState({
+      type: TIMELINE_ITEMS_CHANGED,
+      payload: {
+        items: withEndingDate
+      }
+    });
+
+    // get all possible modules for addition
+    const allPossibleModules = await getALlPossibleModules().catch(err =>
+      console.log(err)
+    );
+    setState({
+      type: ALL_POSSIBLE_MODULES_CHANGED,
+      payload: {
+        modules: allPossibleModules
+      }
+    });
+
+    // get all sundays and count how many weeks
+    const { allWeeks, allSundays } = getAllTotalWeeksAndSundays(withEndingDate);
+
+    //set State with all sundays
+    setState({
+      type: ALL_SUNDAYS_CHANGED,
+      payload: {
+        allSundays
+      }
+    });
+
+    // Set state with all weeks moments
+    setState({
+      type: ALL_WEEKS_CHANGED,
+      payload: {
+        allWeeks
+      }
+    });
+
+    // set state with total weeks during all known schedule for current classes
   };
 
   const updateModule = (module, action) => {
@@ -122,6 +158,25 @@ export default function() {
       });
   };
 
+  const handleAddModule = async (
+    selectedModule,
+    selectedGroup,
+    duration,
+    selectedDate,
+    items
+  ) => {
+    // make all the computations in util
+    addNewModuleToClass(
+      selectedModule,
+      selectedGroup,
+      duration,
+      selectedDate,
+      items
+    ).then(res => {
+      console.error('hahahaha', res);
+    });
+  };
+
   const addTheClass = (className, starting_date) => {
     return addNewClass(className, starting_date);
   };
@@ -133,6 +188,7 @@ export default function() {
     setState,
     fetchItems,
     updateModule,
+    handleAddModule,
     addTheClass,
     handleAssignTeachers
   };

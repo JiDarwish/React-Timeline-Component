@@ -5,8 +5,8 @@ const BASE_URL = 'http://localhost:3005';
 
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems() {
-  return Promise.resolve(fakeData);
-  // return fetch(BASE_URL + '/api/timeline').then(res => res.json());
+  // return Promise.resolve(fakeData);
+  return fetch(BASE_URL + '/api/timeline').then(res => res.json());
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -38,9 +38,7 @@ export function getAllTotalWeeksAndSundays(allItems) {
   const firstDate = moment.min(onlyModules.map(module => module.starting_date));
   const lastDate = moment.max(onlyModules.map(module => module.ending_date));
 
-  const allWeeks = _getAllWeeks(firstDate, lastDate);
-
-  return allWeeks;
+  return _getAllWeeks(firstDate, lastDate);
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
@@ -183,7 +181,7 @@ function _getAllWeeks(startingDate, endingDate) {
     return acc;
   }, []);
 
-  return allWeeks;
+  return { allWeeks, allSundays };
 }
 
 // this is not used yet cause there's nothing shown to user to invoke it
@@ -209,4 +207,73 @@ export function addNewClass(className, starting_date) {
   //   body: JSON.stringify(body)
   // }).then(res => res.json());
   return Promise.resolve();
+}
+
+export function getALlPossibleModules() {
+  return fetch(`${BASE_URL}/api/modules`).then(res => res.json());
+}
+
+export function getAllGroupsWithIds() {
+  return fetch(`${BASE_URL}/api/groups`).then(res => res.json());
+}
+
+export function addNewModuleToClass(
+  selectedModule,
+  selectedGroup,
+  duration,
+  selectedDate,
+  items
+) {
+  if (selectedGroup.group_name) {
+    console.log('here will return something');
+    return _patchNewModuleForOneGroup(
+      selectedModule,
+      selectedDate,
+      selectedGroup.id,
+      items,
+      duration
+    );
+  } else {
+    // something later
+    console.log('doing nothing');
+  }
+  return Promise.resolve();
+}
+
+function _patchNewModuleForOneGroup(
+  selectedModule,
+  selectedDate,
+  selectedGroupId,
+  items,
+  duration
+) {
+  let collision = false;
+  const selectedDateMoment = new moment(selectedDate, 'YYYY-MM-DD');
+  for (let item of items) {
+    // case 1 it is betweeen the staritng and the end! Nasty
+    if (selectedDateMoment.isBetween(item.starting_date, item.ending_date)) {
+      collision = true;
+    }
+    if (selectedDateMoment.diff(item.ending_date) === 0) {
+      console.log('its at the end of the damn module!');
+      console.log('item position', item.position);
+      const position = +item.position + 1; // to add it after and not in place
+      console.log(position);
+      const { id } = selectedModule;
+      console.warn('here and will return it');
+      return _addModule(id, selectedGroupId, position);
+    }
+  }
+  console.log('collision ?', collision);
+}
+
+function _addModule(moduleId, groupId, position) {
+  // return fetch(
+  //   `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
+  //   {
+  //     method: 'PATCH',
+  //     headers: { 'Content-Type': 'Application/json' }
+  //   }
+  // ).then(res => res.json());
+  return Promise.resolve('Hi');
 }

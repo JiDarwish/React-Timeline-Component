@@ -20,18 +20,9 @@ export default class TaskComp extends Component {
     this.setState({ assignTeacherModalIsToggled: false });
   };
 
-  handleHoverItem = e => {
-    if (!this.state.dontChangeSelectedItem) {
-      console.log('hover');
-      let item = this.props.item;
-      this.props.hoverHandler(e, item); // will call the provided hover event to furthur change the state of the selected module
-      this.setState({ dontChangeSelectedItem: true });
-    }
-  };
-
-  handleNotSelected = e => {
-    this.props.hoverHandler(e, null); // when the mouse leaves we remove stop showing options
-    this.setState({ dontChangeSelectedItem: false });
+  handleClickItem = e => {
+    const { item } = this.props;
+    this.props.itemClickHandler(e, item);
   };
 
   render() {
@@ -93,12 +84,13 @@ export default class TaskComp extends Component {
             data-starting_date={starting_date}
             data-ending_date={ending_date}
             data-duration={duration}
-            onMouseOver={this.handleHoverItem}
-            onMouseLeave={this.handleNotSelected}
+            onClick={this.handleClickItem}
           >
-            <div className='taskComp__inner'>
-              <p className='taskComp__info'>{module_name}</p>
-              <p className={classes.dates + ' taskComp__info'}>{theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}</p>
+            <div className="taskComp__inner">
+              <p className="taskComp__info">{module_name}</p>
+              <p className={classes.dates + ' taskComp__info'}>
+                {theStart.format('DD MMMM')} - {ending_date.format('DD MMMM')}
+              </p>
             </div>
 
             {dropdownList}

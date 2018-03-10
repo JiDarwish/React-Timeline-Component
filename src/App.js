@@ -7,7 +7,9 @@ import {
   TIMELINE_GROUPS_CHANGED,
   ALL_WEEKS_CHANGED,
   TODAY_MARKER_REFERENCE,
-  SELECTED_MODULE_ID_CHANGED
+  SELECTED_MODULE_ID_CHANGED,
+  ALL_POSSIBLE_MODULES_CHANGED,
+  GROUPS_WITH_IDS_CHANGED
 } from './Store';
 
 class App extends Component {
@@ -16,10 +18,12 @@ class App extends Component {
     groups: null,
     allWeeks: null,
     todayMarkerRef: null,
-    selectedModule: null
+    selectedModule: null,
+    modules: null,
+    groupsWithIds: null
   };
 
-  itemHoverHandler(clickEvent, item) {
+  itemClickHandler(clickEvent, item) {
     const selectedItemInStore = timelineStore.getState().selectedModule;
     if (
       !item ||
@@ -42,6 +46,9 @@ class App extends Component {
       case TIMELINE_ITEMS_CHANGED:
         this.setState({ timelineItems: mergedData.payload.items });
         break;
+      case GROUPS_WITH_IDS_CHANGED:
+        this.setState({ groupsWithIds: mergedData.payload.groupsWithIds });
+        break;
       case TODAY_MARKER_REFERENCE:
         this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
         break;
@@ -56,6 +63,10 @@ class App extends Component {
       case ALL_WEEKS_CHANGED:
         const { allWeeks } = mergedData.payload;
         this.setState({ allWeeks: allWeeks });
+        break;
+      case ALL_POSSIBLE_MODULES_CHANGED:
+        const { modules } = mergedData.payload;
+        this.setState({ modules });
         break;
       default:
         break;
@@ -82,7 +93,9 @@ class App extends Component {
           allWeeks={this.state.allWeeks}
           totalWeeks={this.state.totalWeeks}
           selectedModule={this.state.selectedModule}
-          itemHoverHandler={this.itemHoverHandler}
+          itemClickHandler={this.itemClickHandler}
+          allModules={this.state.modules}
+          groupsWithIds={this.state.groupsWithIds}
         />
       </div>
     );

@@ -38,7 +38,6 @@ export default class AddClassModal extends Component {
     console.log('starting_date', starting_date);
     const { errorArea } = this.refs;
     if (!className || !starting_date) {
-      console.log('here');
       errorArea.innerHTML = 'Please make sure to fill all the inputs';
       return;
     }
@@ -46,7 +45,7 @@ export default class AddClassModal extends Component {
     timelineStore
       .addTheClass(className, starting_date)
       .then(res => {
-        console.log('Awesome got the response');
+        //Awesome got the response close the modal
         this.props.closeModal();
       })
       .catch(err => {

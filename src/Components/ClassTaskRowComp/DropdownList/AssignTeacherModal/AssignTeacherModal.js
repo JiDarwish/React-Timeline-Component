@@ -4,7 +4,6 @@ import Modal from '../../../../Helpers/Modal/Modal';
 
 export default class AssignTeacherModal extends Component {
   render() {
-    // console.log(this.props);
     //TODO: Subscribe to the class responsible to get users and filter to get onlt the
     // teachers then put them in a select tag to choose one of them
     const { selectedModule } = this.props;
