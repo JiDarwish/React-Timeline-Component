@@ -19,7 +19,8 @@ import {
   addNewClass,
   getALlPossibleModules,
   addNewModuleToClass,
-  getAllGroupsWithIds
+  getAllGroupsWithIds,
+  removeModule
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -128,6 +129,9 @@ export default function() {
       case 'weekLonger':
         result = weekLonger(module, getState().groups);
         break;
+      case 'removeModule':
+        result = removeModule(module);
+        break;
       case 'weekShorter':
         result = weekShorter(module, getState().groups);
         break;
@@ -158,22 +162,25 @@ export default function() {
       });
   };
 
-  const handleAddModule = async (
+  const handleAddModule = (
     selectedModule,
     selectedGroup,
     duration,
     selectedDate,
     items
   ) => {
+    const { modules } = _data;
     // make all the computations in util
     addNewModuleToClass(
       selectedModule,
       selectedGroup,
       duration,
       selectedDate,
-      items
+      items,
+      modules
     ).then(res => {
       console.error('hahahaha', res);
+      fetchItems();
     });
   };
 
@@ -193,15 +200,3 @@ export default function() {
     handleAssignTeachers
   };
 }
-
-///////////////////////////////////////////////////////////////// Not used for now
-
-// const handleToggleModal = () => {
-//   const currentModalState = _data.isModalOpen || false;
-//   setState({
-//     type: MODAL_STATE_CHANGED,
-//     payload: {
-//       isModalOpen: !currentModalState
-//     }
-//   });
-// };

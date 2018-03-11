@@ -57,6 +57,13 @@ export default class DropdownList extends Component {
     return itemsAfter.length === 0;
   };
 
+  removeModule = e => {
+    e.stopPropagation();
+
+    const { selectedModule } = this.props;
+    timelineStore.updateModule(selectedModule, 'removeModule');
+  };
+
   render() {
     let moveLeft = this.moveLeft;
     let moveRight = this.moveRight;
@@ -119,6 +126,14 @@ export default class DropdownList extends Component {
                   <img src={graduateCap} alt="graduateCap icon" />
                 </span>
                 <span>Assign teachers</span>
+              </span>
+            </li>
+            <li onClick={this.removeModule}>
+              <span className={classes.listItem}>
+                <span className={classes.symbol}>
+                  <img src={graduateCap} alt="graduateCap icon" />
+                </span>
+                <span>Remove module</span>
               </span>
             </li>
           </ul>

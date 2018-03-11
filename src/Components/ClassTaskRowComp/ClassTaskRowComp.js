@@ -25,7 +25,7 @@ export default class ClassTaskRowComp extends Component {
           groups={this.props.groups}
           itemClickHandler={this.props.itemClickHandler}
           active={active}
-          key={item.starting_date}
+          key={item.running_module_id}
           item={{ ...item }}
           allModules={items}
           width={width}

@@ -81,19 +81,22 @@ export function weekLonger(chosenModule, groups) {
   const { duration } = chosenModule;
   const newDuration = duration + 1;
   console.log('new duration', newDuration);
+  const groupId = chosenModule.id;
   return _patchGroupsModules(
     chosenModule,
     null,
     newDuration,
     null,
     null,
-    groups
+    groupId
   );
 }
 
 export function weekShorter(chosenModule, groups) {
   const { duration } = chosenModule;
   const newDuration = duration - 1;
+  const groupId = chosenModule.id;
+
   console.log('new duration', newDuration);
   return _patchGroupsModules(
     chosenModule,
@@ -101,37 +104,45 @@ export function weekShorter(chosenModule, groups) {
     newDuration,
     null,
     null,
-    groups
+    groupId
   );
 }
 
 export function moveRight(chosenModule, groups) {
-  const { position } = chosenModule;
+  const { position, duration } = chosenModule;
   const newPosition = position + 1;
-  console.log('new position', newPosition);
+  const groupId = chosenModule.id;
+
   return _patchGroupsModules(
     chosenModule,
     newPosition,
+    duration,
     null,
     null,
-    null,
-    groups
+    groupId
   );
 }
 
 export function moveLeft(chosenModule, groups) {
-  console.log(groups);
-  const { position } = chosenModule;
+  const { position, duration } = chosenModule;
   const newPosition = position - 1;
-  console.log('new position', newPosition);
+  const groupId = chosenModule.id;
+
   return _patchGroupsModules(
     chosenModule,
     newPosition,
+    duration,
     null,
     null,
-    null,
-    groups
+    groupId
   );
+}
+
+export function removeModule(chosenModule) {
+  const { id, position } = chosenModule;
+  return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
+    method: 'DELETE'
+  }).then(res => res.json());
 }
 
 // helper functions
@@ -142,14 +153,10 @@ function _patchGroupsModules(
   newDuration,
   teacher1_id,
   teacher2_id,
-  groups
+  group_id
 ) {
   // we need position for request and group_name to filter the group id wanted
-  const { position, group_name } = item;
-
-  const group_id = groups
-    .filter(group => group.group_name === group_name)
-    .map(group => group.id)[0];
+  const { position } = item;
 
   const body = {
     duration: newDuration,
@@ -157,12 +164,12 @@ function _patchGroupsModules(
     teacher1_id,
     teacher2_id
   };
-  // return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
-  //   method: 'PATCH',
-  //   headers: { 'Content-Type': 'Application/json' },
-  //   body: JSON.stringify(body)
-  // }).then(res => res.json());
-  return Promise.resolve();
+  return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'Application/json' },
+    body: JSON.stringify(body)
+  }).then(res => res.json());
+  // return Promise.resolve('yo I just did it');
 }
 
 function _getAllWeeks(startingDate, endingDate) {
@@ -222,20 +229,20 @@ export function addNewModuleToClass(
   selectedGroup,
   duration,
   selectedDate,
-  items
+  items,
+  modules
 ) {
-  if (selectedGroup.group_name) {
-    console.log('here will return something');
+  if (selectedGroup !== 'All classes') {
     return _patchNewModuleForOneGroup(
       selectedModule,
       selectedDate,
+      duration,
       selectedGroup.id,
       items,
-      duration
+      modules
     );
   } else {
     // something later
-    console.log('doing nothing');
   }
   return Promise.resolve();
 }
@@ -243,37 +250,90 @@ export function addNewModuleToClass(
 function _patchNewModuleForOneGroup(
   selectedModule,
   selectedDate,
+  duration,
   selectedGroupId,
   items,
-  duration
+  modules
 ) {
-  let collision = false;
   const selectedDateMoment = new moment(selectedDate, 'YYYY-MM-DD');
   for (let item of items) {
-    // case 1 it is betweeen the staritng and the end! Nasty
+    // case 1 it is betweeen the staritng and the end! Nasty/////////////////////////////////////////////
     if (selectedDateMoment.isBetween(item.starting_date, item.ending_date)) {
-      collision = true;
+      // step 1 make that module shorter so that the new module could come right after
+      const newDuration = _getNewDurationWhenAddingModule(
+        selectedDateMoment,
+        item
+      );
+      // send to backend the new duration to the backendc
+      return _patchGroupsModules(
+        item,
+        item.position,
+        newDuration,
+        null,
+        null,
+        selectedGroupId
+      )
+        .then(res => {
+          //step 2 add the new module after that one
+          const position = +item.position + 1;
+          const { id } = selectedModule;
+          return _addModule(id, selectedGroupId, position)
+            .then(res => {
+              // step 3 add the new module
+              const remainingDuration = item.duration - newDuration;
+              const otherHalfPosition = position + 1;
+              const thisModuleId = modules.filter(
+                one => one.module_name === item.module_name
+              )[0].id;
+              return (
+                // TODO: we need the id of the other half of the module
+                _addModule(thisModuleId, selectedGroupId, otherHalfPosition)
+                  // now adjust the duration so that it's just the rest of the module not a new one
+                  .then(res => {
+                    return _patchGroupsModules(
+                      { position: otherHalfPosition },
+                      null,
+                      remainingDuration,
+                      null,
+                      null,
+                      selectedGroupId
+                    );
+                  })
+              );
+            })
+            .catch(err => {
+              console.log(err);
+              return Promise.reject(); // maybe to give the user indication that it went wrong
+            });
+        })
+        .catch(err => {
+          console.log(err);
+          return Promise.reject(); // maybe to give the user indication that it went wrong
+        });
     }
     if (selectedDateMoment.diff(item.ending_date) === 0) {
-      console.log('its at the end of the damn module!');
-      console.log('item position', item.position);
-      const position = +item.position + 1; // to add it after and not in place
-      console.log(position);
+      // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
+      const position = +item.position + 1;
       const { id } = selectedModule;
-      console.warn('here and will return it');
       return _addModule(id, selectedGroupId, position);
     }
   }
-  console.log('collision ?', collision);
+}
+
+function _getNewDurationWhenAddingModule(selectedDate, module) {
+  return selectedDate.diff(module.starting_date, 'week');
 }
 
 function _addModule(moduleId, groupId, position) {
-  // return fetch(
-  //   `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
-  //   {
-  //     method: 'PATCH',
-  //     headers: { 'Content-Type': 'Application/json' }
-  //   }
-  // ).then(res => res.json());
-  return Promise.resolve('Hi');
+  return fetch(
+    `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'Application/json' }
+    }
+  ).then(res => res.json());
+  // return Promise.resolve('Hi');
 }
+
+// TODO: to all the moveRight, left .... functions the groups are being passed but that's not needed. Remove them from above going down
+// TODO: the weekLonger is behaving weird

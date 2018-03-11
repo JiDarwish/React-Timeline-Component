@@ -141,7 +141,6 @@ export default class AddNewModuleModal extends Component {
         group => group.group_name === selectedGroup
       )[0];
     }
-
     timelineStore.handleAddModule(
       selectedModule,
       groupWithId,
@@ -163,12 +162,10 @@ export default class AddNewModuleModal extends Component {
   };
 
   render() {
-    console.log(this.state);
     const { groups } = this.props;
     const { modules, allSundays } = timelineStore.getState();
     if (!groups || !modules || !allSundays) return null;
     const groupsPlus = ['All classes', ...groups];
-    let errorMessage = null;
 
     return (
       <div>
@@ -190,6 +187,7 @@ export default class AddNewModuleModal extends Component {
             value={this.state.selectedDate}
             onChange={this.handleChangeDate}
           />
+          {/* FIXME: set a min and a max attr */}
           <span>{this.state.errorMessage}</span>
           <button onClick={this.props.closeModal}>Cancel</button>
           <button onClick={this.handleAddModule}>Ok</button>
