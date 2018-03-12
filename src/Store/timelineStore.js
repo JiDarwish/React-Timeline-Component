@@ -20,7 +20,8 @@ import {
   getALlPossibleModules,
   addNewModuleToClass,
   getAllGroupsWithIds,
-  removeModule
+  removeModule,
+  getAllSharedDates
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -169,23 +170,25 @@ export default function() {
     selectedDate,
     items
   ) => {
-    const { modules } = _data;
     // make all the computations in util
     addNewModuleToClass(
       selectedModule,
       selectedGroup,
       duration,
       selectedDate,
-      items,
-      modules
+      items
     ).then(res => {
-      console.error('hahahaha', res);
+      // console.error('hahahaha', res);
       fetchItems();
     });
   };
 
   const addTheClass = (className, starting_date) => {
     return addNewClass(className, starting_date);
+  };
+
+  const getSharedDates = items => {
+    return getAllSharedDates(items);
   };
   return {
     subscribe,
@@ -197,6 +200,7 @@ export default function() {
     updateModule,
     handleAddModule,
     addTheClass,
+    getSharedDates,
     handleAssignTeachers
   };
 }

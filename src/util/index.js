@@ -224,31 +224,89 @@ export function getAllGroupsWithIds() {
   return fetch(`${BASE_URL}/api/groups`).then(res => res.json());
 }
 
+export function getAllSharedDates(items) {
+  const keys = Object.keys(items);
+  const minAndMax = keys.reduce(
+    (acc, key) => {
+      const modules = items[key];
+      const startingsOfModule = modules.map(module => module.starting_date);
+      let minCurrentModules = moment.min(startingsOfModule);
+      if (minCurrentModules.day() !== 0) {
+        const daysToSunday = 7 - minCurrentModules.day();
+        for (let x = 0; x < daysToSunday; x++) {
+          minCurrentModules.add(1, 'day');
+        }
+      }
+      const endingsOfModule = modules.map(module => module.ending_date);
+      const maxCurrentModules = moment.max(endingsOfModule);
+      if (acc.min && acc.max) {
+        const min =
+          minCurrentModules.diff(acc.min) > 0 ? minCurrentModules : acc.min;
+        const max =
+          maxCurrentModules.diff(acc.max) < 0 ? maxCurrentModules : acc.max;
+        return {
+          min,
+          max
+        };
+      } else {
+        return {
+          min: minCurrentModules,
+          max: maxCurrentModules
+        };
+      }
+    },
+    { min: '', max: '' }
+  );
+  return minAndMax;
+}
+
 export function addNewModuleToClass(
-  selectedModule,
-  selectedGroup,
+  selectedModuleId,
+  selectedGroupId,
   duration,
   selectedDate,
-  items,
-  modules
+  items
 ) {
-  if (selectedGroup !== 'All classes') {
-    return _patchNewModuleForOneGroup(
-      selectedModule,
-      selectedDate,
-      duration,
-      selectedGroup.id,
-      items,
-      modules
-    );
-  } else {
-    // something later
-  }
-  return Promise.resolve();
+  console.log('here');
+  console.log(selectedModuleId);
+  console.log(selectedGroupId);
+  console.log(duration);
+  console.log(selectedDate);
+  console.log(items);
+  return Promise.resolve('Yo');
+  // console.log('selected group', selectedGroupId);
+  // if (selectedGroupId !== 'All classes') {
+  //   console.log('doing 1');
+  //   return _patchNewModuleForOneGroup(
+  //     selectedModuleId,
+  //     selectedDate,
+  //     duration,
+  //     selectedGroupId,
+  //     items
+  //   );
+  // } else {
+  //   // something later
+  //   const allGroups = Object.keys(items);
+  //   let allPromises = [];
+  //   allGroups.forEach(group => {
+  //     const groupsItems = items[group];
+  //     const groupId = groupsItems[0].id;
+  //     allPromises.push(
+  //       _patchNewModuleForOneGroup(
+  //         selectedModuleId,
+  //         selectedDate,
+  //         duration,
+  //         groupId,
+  //         groupsItems
+  //       )
+  //     );
+  //   });
+  //   return Promise.resolve(allPromises);
+  // }
 }
 
 function _patchNewModuleForOneGroup(
-  selectedModule,
+  selectedModuleId,
   selectedDate,
   duration,
   selectedGroupId,
@@ -276,18 +334,14 @@ function _patchNewModuleForOneGroup(
         .then(res => {
           //step 2 add the new module after that one
           const position = +item.position + 1;
-          const { id } = selectedModule;
-          return _addModule(id, selectedGroupId, position)
+          console.log('this is the selected module', selectedModuleId);
+          return _addModule(selectedModuleId, selectedGroupId, position)
             .then(res => {
               // step 3 add the new module
               const remainingDuration = item.duration - newDuration;
               const otherHalfPosition = position + 1;
-              const thisModuleId = modules.filter(
-                one => one.module_name === item.module_name
-              )[0].id;
               return (
-                // TODO: we need the id of the other half of the module
-                _addModule(thisModuleId, selectedGroupId, otherHalfPosition)
+                _addModule(selectedModuleId, selectedGroupId, otherHalfPosition)
                   // now adjust the duration so that it's just the rest of the module not a new one
                   .then(res => {
                     return _patchGroupsModules(
@@ -314,17 +368,15 @@ function _patchNewModuleForOneGroup(
     if (selectedDateMoment.diff(item.ending_date) === 0) {
       // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
       const position = +item.position + 1;
-      const { id } = selectedModule;
-      return _addModule(id, selectedGroupId, position);
+      return _addModule(selectedModuleId, selectedGroupId, position);
     }
   }
 }
 
-function _getNewDurationWhenAddingModule(selectedDate, module) {
-  return selectedDate.diff(module.starting_date, 'week');
-}
-
-function _addModule(moduleId, groupId, position) {
+async function _addModule(moduleId, groupId, position) {
+  console.log(moduleId);
+  console.log('adding', moduleId, groupId, position);
+  return Promise.resolve('Hi');
   return fetch(
     `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
     {
@@ -332,7 +384,10 @@ function _addModule(moduleId, groupId, position) {
       headers: { 'Content-Type': 'Application/json' }
     }
   ).then(res => res.json());
-  // return Promise.resolve('Hi');
+}
+
+function _getNewDurationWhenAddingModule(selectedDate, module) {
+  return selectedDate.diff(module.starting_date, 'week');
 }
 
 // TODO: to all the moveRight, left .... functions the groups are being passed but that's not needed. Remove them from above going down
