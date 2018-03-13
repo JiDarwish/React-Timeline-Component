@@ -4,7 +4,8 @@ import {
   ALL_WEEKS_CHANGED,
   ALL_POSSIBLE_MODULES_CHANGED,
   ALL_SUNDAYS_CHANGED,
-  GROUPS_WITH_IDS_CHANGED
+  GROUPS_WITH_IDS_CHANGED,
+  ALL_TEACHERS_CHAGNED
 } from './';
 
 import {
@@ -21,7 +22,8 @@ import {
   addNewModuleToClass,
   getAllGroupsWithIds,
   removeModule,
-  getAllSharedDates
+  getAllSharedDates,
+  getTeachers
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -121,6 +123,17 @@ export default function() {
       }
     });
 
+    getTeachers().then(res => {
+      console.log('her');
+      const teachers = res.filter(user => user.role === 'teacher');
+      setState({
+        type: ALL_TEACHERS_CHAGNED,
+        payload: {
+          teachers
+        }
+      });
+    });
+
     // set state with total weeks during all known schedule for current classes
   };
 
@@ -155,12 +168,14 @@ export default function() {
 
   const handleAssignTeachers = (item, teacher1, teacher2) => {
     const groups = getState().groups;
-    assignTeachers(item, groups, teacher1, teacher2)
-      // when done go back throught the whole procedure to get the items on screen
-      .then(() => {
-        fetchItems();
-        console.log('herer');
-      });
+    return (
+      assignTeachers(item, groups, teacher1, teacher2)
+        // when done go back throught the whole procedure to get the items on screen
+        .then(() => {
+          fetchItems();
+          console.log('herer');
+        })
+    );
   };
 
   const handleAddModule = (

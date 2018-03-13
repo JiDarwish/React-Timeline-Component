@@ -66,6 +66,7 @@ export default class TaskComp extends Component {
     return (
       <div>
         <AssignTeacherModal
+          teachers={this.props.teachers}
           visible={this.state.assignTeacherModalIsToggled}
           selectedModule={this.props.selectedModule}
           assignTeachersFunc={timelineStore.handleAssignTeachers}

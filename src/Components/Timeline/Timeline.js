@@ -50,6 +50,7 @@ export default class Timeline extends Component {
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
+            teachers={this.props.teachers}
             selectedModule={this.props.selectedModule}
             items={items}
             width={itemWidth}

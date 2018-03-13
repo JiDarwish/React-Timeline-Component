@@ -9,7 +9,8 @@ import {
   TODAY_MARKER_REFERENCE,
   SELECTED_MODULE_ID_CHANGED,
   ALL_POSSIBLE_MODULES_CHANGED,
-  GROUPS_WITH_IDS_CHANGED
+  GROUPS_WITH_IDS_CHANGED,
+  ALL_TEACHERS_CHAGNED
 } from './Store';
 
 class App extends Component {
@@ -20,7 +21,8 @@ class App extends Component {
     todayMarkerRef: null,
     selectedModule: null,
     modules: null,
-    groupsWithIds: null
+    groupsWithIds: null,
+    teachers: null
   };
 
   itemClickHandler(clickEvent, item) {
@@ -45,6 +47,9 @@ class App extends Component {
     switch (mergedData.type) {
       case TIMELINE_ITEMS_CHANGED:
         this.setState({ timelineItems: mergedData.payload.items });
+        break;
+      case ALL_TEACHERS_CHAGNED:
+        this.setState({ teachers: mergedData.payload.teachers });
         break;
       case GROUPS_WITH_IDS_CHANGED:
         this.setState({ groupsWithIds: mergedData.payload.groupsWithIds });
@@ -82,6 +87,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <Timeline
@@ -96,6 +102,7 @@ class App extends Component {
           itemClickHandler={this.itemClickHandler}
           allModules={this.state.modules}
           groupsWithIds={this.state.groupsWithIds}
+          teachers={this.state.teachers}
         />
       </div>
     );

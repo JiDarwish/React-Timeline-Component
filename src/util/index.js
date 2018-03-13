@@ -41,6 +41,10 @@ export function getAllTotalWeeksAndSundays(allItems) {
   return _getAllWeeks(firstDate, lastDate);
 }
 
+export function getTeachers() {
+  return fetch(`${BASE_URL}/api/users`).then(res => res.json());
+}
+
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
   // starting date of the first module of a class
   const firstModuleStartingDate = moment.min(
