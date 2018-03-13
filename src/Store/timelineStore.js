@@ -177,7 +177,8 @@ export default function() {
       selectedGroup,
       duration,
       selectedDate,
-      items
+      items,
+      modules
     ).then(res => {
       console.log(res);
       fetchItems();

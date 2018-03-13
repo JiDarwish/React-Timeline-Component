@@ -268,7 +268,6 @@ export function addNewModuleToClass(
   items,
   modules
 ) {
-  console.log(selectedGroup);
   if (selectedGroup !== 'All classes') {
     return _patchNewModuleForOneGroup(
       selectedModuleId,
