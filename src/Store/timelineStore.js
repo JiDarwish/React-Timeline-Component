@@ -163,23 +163,23 @@ export default function() {
   };
 
   const handleAddModule = (
-    selectedModule,
+    selectedModuleId,
     selectedGroup,
     duration,
     selectedDate,
     items
   ) => {
-    const { modules } = _data;
+    const { modules } = _data; // getting all modules from the store directly
     // make all the computations in util
-    addNewModuleToClass(
-      selectedModule,
+    return addNewModuleToClass(
+      selectedModuleId,
       selectedGroup,
       duration,
       selectedDate,
       items,
       modules
     ).then(res => {
-      console.error('hahahaha', res);
+      console.log(res);
       fetchItems();
     });
   };

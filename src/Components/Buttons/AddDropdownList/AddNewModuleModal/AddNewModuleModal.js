@@ -7,10 +7,11 @@ export default class AddNewModuleModal extends Component {
   state = {
     selectedDate: '',
     selectedGroup: '',
-    selectedModule: '',
+    selectedModuleId: '',
     duration: '',
     validDate: null,
-    errorMessage: ''
+    errorMessage: '',
+    mountedFirstTime: false
   };
 
   handleChangeDuration = e => {
@@ -21,8 +22,8 @@ export default class AddNewModuleModal extends Component {
     this.setState({ selectedGroup: e.target.value });
   };
 
-  handleChangeSelectedModule = e => {
-    this.setState({ selectedModule: e.target.value });
+  handleChangeSelectedModuleId = e => {
+    this.setState({ selectedModuleId: e.target.value });
   };
 
   handleChangeDate = e => {
@@ -69,11 +70,11 @@ export default class AddNewModuleModal extends Component {
     return (
       <select
         name="modulesSelect"
-        defaultValue={this.state.selectedModule}
-        onChange={this.handleChangeSelectedModule}
+        value={this.state.selectedModuleId}
+        onChange={this.handleChangeSelectedModuleId}
       >
         {modules.map(module => (
-          <option key={module.module_name} value={module}>
+          <option key={module.module_name} value={module.id}>
             {module.module_name}
           </option>
         ))}
@@ -122,43 +123,59 @@ export default class AddNewModuleModal extends Component {
       return;
     }
     const { items } = this.props;
+    // this step is weird but it's just to pass the modules of a class instead of all of them, or if all classes is selected pass em all
     let className = Object.keys(items).filter(
       group => group === this.state.selectedGroup
     );
     className = className.length === 0 ? 'All classes' : className[0];
 
-    const modulesOfGroup = items[className] || null;
+    const modulesOfGroup = items[className] || items;
 
     const {
       selectedGroup,
       duration,
       selectedDate,
-      selectedModule
+      selectedModuleId
     } = this.state;
     let groupWithId = 'All classes';
-    if (className.length !== 0) {
+    // if the classname is all classes don't get the object group with id on it, cause there isn't one for all classes
+    if (className !== 'All classes') {
       groupWithId = this.props.groupsWithIds.filter(
         group => group.group_name === selectedGroup
       )[0];
     }
-    timelineStore.handleAddModule(
-      selectedModule,
-      groupWithId,
-      duration,
-      selectedDate,
-      modulesOfGroup
-    );
+
+    timelineStore
+      .handleAddModule(
+        selectedModuleId,
+        groupWithId,
+        duration,
+        selectedDate,
+        modulesOfGroup
+      )
+      .then(() => {
+        // this.setInitialState(this.props);
+        this.props.closeModal();
+      });
   };
 
-  // set up the default state
-  componentWillReceiveProps = props => {
+  setInitialState = props => {
     const { modules, groups, items } = props;
     if (!modules || !groups || !items) return;
     this.setState({
       selectedGroup: 'All classes',
-      selectedModule: modules[0],
-      duration: 1
+      selectedModuleId: modules[0].id,
+      duration: 1,
+      mountedFirstTime: true
     });
+  };
+
+  // set up the default state
+  componentWillReceiveProps = props => {
+    if (!this.state.mountedFirstTime) {
+      console.log('receiving props');
+      this.setInitialState(props);
+    }
   };
 
   render() {

@@ -1,6 +1,8 @@
 .root {
   max-width: 100vw;
   overflow-x: scroll;
+  height: 100vh;
+  overflow-y: hidden;
   position: relative;
 }
 

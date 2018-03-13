@@ -225,16 +225,17 @@ export function getAllGroupsWithIds() {
 }
 
 export function addNewModuleToClass(
-  selectedModule,
+  selectedModuleId,
   selectedGroup,
   duration,
   selectedDate,
   items,
   modules
 ) {
+  console.log(selectedGroup);
   if (selectedGroup !== 'All classes') {
     return _patchNewModuleForOneGroup(
-      selectedModule,
+      selectedModuleId,
       selectedDate,
       duration,
       selectedGroup.id,
@@ -242,22 +243,38 @@ export function addNewModuleToClass(
       modules
     );
   } else {
-    // something later
+    const allGroups = Object.keys(items);
+    let allPromises = [];
+    allGroups.forEach(group => {
+      const groupsItems = items[group];
+      const groupId = groupsItems[0].id;
+      allPromises.push(
+        _patchNewModuleForOneGroup(
+          selectedModuleId,
+          selectedDate,
+          duration,
+          groupId,
+          groupsItems,
+          modules
+        )
+      );
+    });
+    return Promise.all(allPromises).then('Fulfilled');
   }
-  return Promise.resolve();
 }
 
 function _patchNewModuleForOneGroup(
-  selectedModule,
+  selectedModuleId,
   selectedDate,
   duration,
   selectedGroupId,
   items,
   modules
 ) {
+  console.log('above', modules);
   const selectedDateMoment = new moment(selectedDate, 'YYYY-MM-DD');
   for (let item of items) {
-    // case 1 it is betweeen the staritng and the end! Nasty/////////////////////////////////////////////
+    // case 1 it is betweeen the staritng and the end! Nasty!!/////////////////////////////////////////////
     if (selectedDateMoment.isBetween(item.starting_date, item.ending_date)) {
       // step 1 make that module shorter so that the new module could come right after
       const newDuration = _getNewDurationWhenAddingModule(
@@ -276,22 +293,33 @@ function _patchNewModuleForOneGroup(
         .then(res => {
           //step 2 add the new module after that one
           const position = +item.position + 1;
-          const { id } = selectedModule;
-          return _addModule(id, selectedGroupId, position)
+          // 1- add it
+          return _addModule(selectedModuleId, selectedGroupId, position)
+            .then(res =>
+              // 2- change the d
+              _patchGroupsModules(
+                { position },
+                null,
+                duration,
+                null,
+                null,
+                selectedGroupId
+              )
+            )
             .then(res => {
               // step 3 add the new module
               const remainingDuration = item.duration - newDuration;
               const otherHalfPosition = position + 1;
-              const thisModuleId = modules.filter(
+              console.log('modules', modules);
+              const splittedModuleId = modules.filter(
                 one => one.module_name === item.module_name
               )[0].id;
               return (
-                // TODO: we need the id of the other half of the module
-                _addModule(thisModuleId, selectedGroupId, otherHalfPosition)
+                _addModule(splittedModuleId, selectedGroupId, otherHalfPosition)
                   // now adjust the duration so that it's just the rest of the module not a new one
                   .then(res => {
                     return _patchGroupsModules(
-                      { position: otherHalfPosition },
+                      { position: otherHalfPosition }, //instead of whole item just the part with position
                       null,
                       remainingDuration,
                       null,
@@ -311,11 +339,20 @@ function _patchNewModuleForOneGroup(
           return Promise.reject(); // maybe to give the user indication that it went wrong
         });
     }
-    if (selectedDateMoment.diff(item.ending_date) === 0) {
+    if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
       // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
       const position = +item.position + 1;
-      const { id } = selectedModule;
-      return _addModule(id, selectedGroupId, position);
+      console.log(selectedModuleId);
+      return _addModule(selectedModuleId, selectedGroupId, position).then(res =>
+        _patchGroupsModules(
+          { position },
+          null,
+          duration,
+          null,
+          null,
+          selectedGroupId
+        )
+      );
     }
   }
 }
