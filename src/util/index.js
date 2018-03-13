@@ -224,6 +224,42 @@ export function getAllGroupsWithIds() {
   return fetch(`${BASE_URL}/api/groups`).then(res => res.json());
 }
 
+export function getAllSharedDates(items) {
+  const keys = Object.keys(items);
+  const minAndMax = keys.reduce(
+    (acc, key) => {
+      const modules = items[key];
+      const startingsOfModule = modules.map(module => module.starting_date);
+      let minCurrentModules = moment.min(startingsOfModule);
+      if (minCurrentModules.day() !== 0) {
+        const daysToSunday = 7 - minCurrentModules.day();
+        for (let x = 0; x < daysToSunday; x++) {
+          minCurrentModules.add(1, 'day');
+        }
+      }
+      const endingsOfModule = modules.map(module => module.ending_date);
+      const maxCurrentModules = moment.max(endingsOfModule);
+      if (acc.min && acc.max) {
+        const min =
+          minCurrentModules.diff(acc.min) > 0 ? minCurrentModules : acc.min;
+        const max =
+          maxCurrentModules.diff(acc.max) < 0 ? maxCurrentModules : acc.max;
+        return {
+          min,
+          max
+        };
+      } else {
+        return {
+          min: minCurrentModules,
+          max: maxCurrentModules
+        };
+      }
+    },
+    { min: '', max: '' }
+  );
+  return minAndMax;
+}
+
 export function addNewModuleToClass(
   selectedModuleId,
   selectedGroup,
@@ -357,11 +393,9 @@ function _patchNewModuleForOneGroup(
   }
 }
 
-function _getNewDurationWhenAddingModule(selectedDate, module) {
-  return selectedDate.diff(module.starting_date, 'week');
-}
-
-function _addModule(moduleId, groupId, position) {
+async function _addModule(moduleId, groupId, position) {
+  console.log(moduleId);
+  console.log('adding', moduleId, groupId, position);
   return fetch(
     `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
     {
@@ -369,7 +403,10 @@ function _addModule(moduleId, groupId, position) {
       headers: { 'Content-Type': 'Application/json' }
     }
   ).then(res => res.json());
-  // return Promise.resolve('Hi');
+}
+
+function _getNewDurationWhenAddingModule(selectedDate, module) {
+  return selectedDate.diff(module.starting_date, 'week');
 }
 
 // TODO: to all the moveRight, left .... functions the groups are being passed but that's not needed. Remove them from above going down

@@ -11,7 +11,13 @@ export default class AddNewModuleModal extends Component {
     duration: '',
     validDate: null,
     errorMessage: '',
-    mountedFirstTime: false
+    mountedFirstTime: false,
+    minDate: '',
+    maxDate: ''
+  };
+
+  getSharedDatesBetweenGroups = () => {
+    return timelineStore.getSharedDates(this.props.items);
   };
 
   handleChangeDuration = e => {
@@ -19,7 +25,25 @@ export default class AddNewModuleModal extends Component {
   };
 
   handleChangeGroup = e => {
-    this.setState({ selectedGroup: e.target.value });
+    const groupName = e.target.value;
+    this.setState({ selectedGroup: groupName });
+    if (groupName !== 'All classes') {
+      const modules = this.props.items[groupName];
+      const startingsOfModule = modules.map(module => module.starting_date);
+      const min = moment.min(startingsOfModule);
+      const endingsOfModule = modules.map(module => module.ending_date);
+      const max = moment.max(endingsOfModule);
+      this.setState({
+        minDate: min.format('YYYY-MM-DD'),
+        maxDate: max.format('YYYY-MM-DD')
+      });
+    } else {
+      const { min, max } = this.getSharedDatesBetweenGroups();
+      this.setState({
+        minDate: min.format('YYYY-MM-DD'),
+        maxDate: max.format('YYYY-MM-DD')
+      });
+    }
   };
 
   handleChangeSelectedModuleId = e => {
@@ -86,7 +110,7 @@ export default class AddNewModuleModal extends Component {
     return (
       <select
         name="groupSelect"
-        defaultValue={this.state.selectedGroup}
+        value={this.state.selectedGroup}
         onChange={this.handleChangeGroup}
       >
         {groups.map(group => (
@@ -102,7 +126,7 @@ export default class AddNewModuleModal extends Component {
     return (
       <select
         name="durationOfModule"
-        defaultValue={this.state.duration}
+        value={this.state.duration}
         onChange={this.handleChangeDuration}
       >
         {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
@@ -141,7 +165,7 @@ export default class AddNewModuleModal extends Component {
     // if the classname is all classes don't get the object group with id on it, cause there isn't one for all classes
     if (className !== 'All classes') {
       groupWithId = this.props.groupsWithIds.filter(
-        group => group.group_name === selectedGroup
+        group => group.group_name === selectedGroup // if something matched it is instead of 'All classes'
       )[0];
     }
 
@@ -162,11 +186,14 @@ export default class AddNewModuleModal extends Component {
   setInitialState = props => {
     const { modules, groups, items } = props;
     if (!modules || !groups || !items) return;
+    const { min, max } = this.getSharedDatesBetweenGroups();
     this.setState({
       selectedGroup: 'All classes',
       selectedModuleId: modules[0].id,
       duration: 1,
-      mountedFirstTime: true
+      mountedFirstTime: true,
+      minDate: min.format('YYYY-MM-DD'),
+      maxDate: max.format('YYYY-MM-DD')
     });
   };
 
@@ -198,11 +225,17 @@ export default class AddNewModuleModal extends Component {
           <label htmlFor="durationOfModule">Duration (weeks)</label>
           {this.renderDurationOfModule()}
           <label htmlFor="sundaySelect">Starting date of module</label>
+          <span>
+            If you choose a date that is not a suday, the date picker will roll
+            back to the last sunday
+          </span>
           <input
             type="date"
             name="sundaySelect"
             value={this.state.selectedDate}
             onChange={this.handleChangeDate}
+            min={this.state.minDate}
+            max={this.state.maxDate}
           />
           {/* FIXME: set a min and a max attr */}
           <span>{this.state.errorMessage}</span>

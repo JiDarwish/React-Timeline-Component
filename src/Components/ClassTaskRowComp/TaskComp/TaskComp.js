@@ -59,7 +59,7 @@ export default class TaskComp extends Component {
         </div>
       );
     }
-    const theStart = starting_date.clone();
+    const theStart = starting_date;
     theStart.add(2, 'hours');
     // ending_date.subtract(1, )
 

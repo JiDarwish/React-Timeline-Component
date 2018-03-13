@@ -20,7 +20,8 @@ import {
   getALlPossibleModules,
   addNewModuleToClass,
   getAllGroupsWithIds,
-  removeModule
+  removeModule,
+  getAllSharedDates
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -176,8 +177,7 @@ export default function() {
       selectedGroup,
       duration,
       selectedDate,
-      items,
-      modules
+      items
     ).then(res => {
       console.log(res);
       fetchItems();
@@ -186,6 +186,10 @@ export default function() {
 
   const addTheClass = (className, starting_date) => {
     return addNewClass(className, starting_date);
+  };
+
+  const getSharedDates = items => {
+    return getAllSharedDates(items);
   };
   return {
     subscribe,
@@ -197,6 +201,7 @@ export default function() {
     updateModule,
     handleAddModule,
     addTheClass,
+    getSharedDates,
     handleAssignTeachers
   };
 }
