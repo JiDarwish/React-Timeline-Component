@@ -32,6 +32,7 @@ export default class ClassTaskRowComp extends Component {
           width={width}
           height={height}
           selectedModule={selectedModule}
+          infoSelectedModule={this.props.infoSelectedModule}
         />
       );
     });

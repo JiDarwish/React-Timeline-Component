@@ -5,7 +5,8 @@ import {
   ALL_POSSIBLE_MODULES_CHANGED,
   ALL_SUNDAYS_CHANGED,
   GROUPS_WITH_IDS_CHANGED,
-  ALL_TEACHERS_CHAGNED
+  ALL_TEACHERS_CHAGNED,
+  INFO_SELECTED_MDOULE_CHANGED
 } from './';
 
 import {
@@ -23,7 +24,8 @@ import {
   getAllGroupsWithIds,
   removeModule,
   getAllSharedDates,
-  getTeachers
+  getTeachers,
+  getModulesOfGroup
 } from '../util';
 
 const BASE_URL = 'http://localhost:3005';
@@ -124,7 +126,6 @@ export default function() {
     });
 
     getTeachers().then(res => {
-      console.log('her');
       const teachers = res.filter(user => user.role === 'teacher');
       setState({
         type: ALL_TEACHERS_CHAGNED,
@@ -167,14 +168,16 @@ export default function() {
   };
 
   const handleAssignTeachers = (item, teacher1, teacher2) => {
-    const groups = getState().groups;
+    console.log('got a request here');
     return (
-      assignTeachers(item, groups, teacher1, teacher2)
+      // item.id is the id of the group
+      assignTeachers(item, item.id, teacher1, teacher2)
         // when done go back throught the whole procedure to get the items on screen
         .then(() => {
           fetchItems();
           console.log('herer');
         })
+        .catch(err => console.log(err))
     );
   };
 
@@ -207,6 +210,22 @@ export default function() {
   const getSharedDates = items => {
     return getAllSharedDates(items);
   };
+
+  const getSelectedModuleInfo = item => {
+    // give it to util to handle
+    console.log('Getting the modules of this group');
+    getModulesOfGroup(item.id)
+      .then(res => {
+        setState({
+          type: INFO_SELECTED_MDOULE_CHANGED,
+          payload: {
+            allModulesOfGroup: res[item.position]
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   return {
     subscribe,
     unsubscribe,
@@ -218,6 +237,7 @@ export default function() {
     handleAddModule,
     addTheClass,
     getSharedDates,
-    handleAssignTeachers
+    handleAssignTeachers,
+    getSelectedModuleInfo
   };
 }

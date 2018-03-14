@@ -10,7 +10,8 @@ import {
   SELECTED_MODULE_ID_CHANGED,
   ALL_POSSIBLE_MODULES_CHANGED,
   GROUPS_WITH_IDS_CHANGED,
-  ALL_TEACHERS_CHAGNED
+  ALL_TEACHERS_CHAGNED,
+  INFO_SELECTED_MDOULE_CHANGED
 } from './Store';
 
 class App extends Component {
@@ -22,7 +23,8 @@ class App extends Component {
     selectedModule: null,
     modules: null,
     groupsWithIds: null,
-    teachers: null
+    teachers: null,
+    infoSelectedModule: null
   };
 
   itemClickHandler(clickEvent, item) {
@@ -34,6 +36,9 @@ class App extends Component {
     ) {
       // if the clicked module is the same on unselect it
       item = null;
+    } else {
+      console.log('getting selectedmoduleinfo');
+      timelineStore.getSelectedModuleInfo(item);
     }
     timelineStore.setState({
       type: SELECTED_MODULE_ID_CHANGED,
@@ -61,6 +66,7 @@ class App extends Component {
         this.setState({ groups: mergedData.payload.groups });
         break;
       case SELECTED_MODULE_ID_CHANGED:
+        console.log('here selecting something');
         this.setState({
           selectedModule: mergedData.payload.selectedModule
         });
@@ -72,6 +78,11 @@ class App extends Component {
       case ALL_POSSIBLE_MODULES_CHANGED:
         const { modules } = mergedData.payload;
         this.setState({ modules });
+        break;
+      case INFO_SELECTED_MDOULE_CHANGED:
+        this.setState({
+          infoSelectedModule: mergedData.payload.allModulesOfGroup
+        });
         break;
       default:
         break;
@@ -87,7 +98,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <Timeline
@@ -103,6 +113,7 @@ class App extends Component {
           allModules={this.state.modules}
           groupsWithIds={this.state.groupsWithIds}
           teachers={this.state.teachers}
+          infoSelectedModule={this.state.infoSelectedModule}
         />
       </div>
     );

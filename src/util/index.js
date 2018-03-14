@@ -149,7 +149,11 @@ export function removeModule(chosenModule) {
   }).then(res => res.json());
 }
 
-// helper functions
+export function getModulesOfGroup(groupId) {
+  return fetch(`${BASE_URL}/api/running/${groupId}`).then(res => res.json());
+}
+
+////////////////////////////////////////////////////////////////// helper functions
 
 function _patchGroupsModules(
   item,
@@ -159,6 +163,7 @@ function _patchGroupsModules(
   teacher2_id,
   group_id
 ) {
+  console.log('here');
   // we need position for request and group_name to filter the group id wanted
   const { position } = item;
 
@@ -196,11 +201,16 @@ function _getAllWeeks(startingDate, endingDate) {
 }
 
 // this is not used yet cause there's nothing shown to user to invoke it
-export function assignTeachers(item, groups, teacher1, teacher2) {
-  const teacher1_id = teacher1 ? teacher1.id : null;
-  const teacher2_id = teacher2 ? teacher2.id : null;
-  // return _patchGroupsModules(item, null, null, teacher1_id, teacher2_id, groups);
-  return Promise.resolve();
+export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
+  console.log('get a request as well', teacher1_id, teacher2_id);
+  return _patchGroupsModules(
+    item,
+    null,
+    item.duration,
+    teacher1_id,
+    teacher2_id,
+    groupsId
+  );
 }
 
 export function addNewClass(className, starting_date) {
@@ -210,14 +220,13 @@ export function addNewClass(className, starting_date) {
     starting_date: date.toISOString()
   };
 
-  // return fetch(`${BASE_URL}/api/groups`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'Application/json'
-  //   },
-  //   body: JSON.stringify(body)
-  // }).then(res => res.json());
-  return Promise.resolve();
+  return fetch(`${BASE_URL}/api/groups`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'Application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(res => res.json());
 }
 
 export function getALlPossibleModules() {
@@ -411,6 +420,3 @@ async function _addModule(moduleId, groupId, position) {
 function _getNewDurationWhenAddingModule(selectedDate, module) {
   return selectedDate.diff(module.starting_date, 'week');
 }
-
-// TODO: to all the moveRight, left .... functions the groups are being passed but that's not needed. Remove them from above going down
-// TODO: the weekLonger is behaving weird

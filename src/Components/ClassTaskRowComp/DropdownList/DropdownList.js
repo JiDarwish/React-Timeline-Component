@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import classes from './dropdownList.css';
 import Dropdown from '../../../Helpers/Dropdown/Dropdown';
 import RoundButton from '../../../Helpers/RoundButton/RoundButton';
-import ballpointPen from './icons/ballpointPen.svg';
+import deleteCross from './icons/delete.svg';
 import rightArrow1 from './icons/rightArrow1.svg';
 import rightArrow2 from './icons/rightArrow2.svg';
 import leftArrow1 from './icons/leftArrow1.svg';
@@ -125,13 +125,13 @@ export default class DropdownList extends Component {
                 <span className={classes.symbol}>
                   <img src={graduateCap} alt="graduateCap icon" />
                 </span>
-                <span>Assign teachers</span>
+                <span>(Re)assign teachers</span>
               </span>
             </li>
             <li onClick={this.removeModule}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
-                  <img src={graduateCap} alt="graduateCap icon" />
+                  <img src={deleteCross} alt="delete icon" />
                 </span>
                 <span>Remove module</span>
               </span>
