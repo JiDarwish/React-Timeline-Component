@@ -69,24 +69,24 @@ export default function() {
 
     // set the state with the array of all current groups [maybe needed for sidecolumn group names]
     const groups = Object.keys(timelineItems);
-    setState({
-      type: TIMELINE_GROUPS_CHANGED,
-      payload: {
-        // TODO:
-        groups
-      }
-    });
+    groups.sort();
+    const orderdTimelineItems = {};
+    groups.forEach(group => {
+      orderdTimelineItems[group] = timelineItems[group];
+    })
+    console.log(orderdTimelineItems);
+    
 
-    const groupsWithIds = await getAllGroupsWithIds();
+    // const groupsWithIds = await getAllGroupsWithIds();
 
-    setState({
-      type: GROUPS_WITH_IDS_CHANGED,
-      payload: {
-        groupsWithIds
-      }
-    });
+    // setState({
+    //   type: GROUPS_WITH_IDS_CHANGED,
+    //   payload: {
+    //     groupsWithIds
+    //   }
+    // });
 
-    const withEndingDate = setEndingDateForModules(timelineItems, groups); // group names
+    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups); // group names
     // set the state with the new received items
     setState({
       type: TIMELINE_ITEMS_CHANGED,
@@ -133,6 +133,15 @@ export default function() {
           teachers
         }
       });
+    });
+
+
+    setState({
+      type: TIMELINE_GROUPS_CHANGED,
+      payload: {
+        // TODO:
+        groups
+      }
     });
 
     // set state with total weeks during all known schedule for current classes
@@ -204,7 +213,8 @@ export default function() {
   };
 
   const addTheClass = (className, starting_date) => {
-    return addNewClass(className, starting_date);
+    console.log('Adding the class')
+    return addNewClass(className, starting_date).then(() => fetchItems())
   };
 
   const getSharedDates = items => {

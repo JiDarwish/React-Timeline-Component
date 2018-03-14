@@ -6,54 +6,58 @@ import { timelineStore } from '../../../../Store/';
 // TODO: Style the form like the one on Hyfer
 export default class AddClassModal extends Component {
   state = {
-    className: '',
+    classNumber: '',
     starting_date: '',
-    focusId: null,
-    errorIds: []
+    errorMessage: ''
   };
 
-  onFocus = e => {
-    this.setState({ focusId: e.target.id });
-  };
-  onBlur = e => {
-    this.setState({ focusId: '' });
-  };
+  // onFocus = e => {
+  //   this.setState({ focusId: e.target.id });
+  // };
+  // onBlur = e => {
+  //   this.setState({ focusId: '' });
+  // };
 
   handleChangeClassNameInput = e => {
-    const { id, value } = e.target;
-    this.setState({ className: value });
-    // validate the input
-    if (this.state.className === '') {
-      this.setState({ errorIds: [...this.state.errorIds, id] });
+    const { value } = e.target;
+    this.setState({ classNumber: value });
+    const { starting_date} = this.state;
+    if (value && starting_date) {
+      this.setState({errorMessage: ''});
     }
   };
-
+    
   handleChangeStartingDateInput = e => {
-    this.setState({ starting_date: e.target.value });
+    // if all valid remove weird error message
+    const {value} = e.target;
+    const {classNumber} = this.state;
+    if (classNumber && value) {
+      this.setState({errorMessage: ''});
+    }
+    this.setState({ starting_date: value });
   };
 
   addNewClass = () => {
-    const { className, starting_date } = this.state;
-    console.log('className', className);
-    console.log('starting_date', starting_date);
-    const { errorArea } = this.refs;
-    if (!className || !starting_date) {
-      errorArea.innerHTML = 'Please make sure to fill all the inputs';
+    const { classNumber, starting_date } = this.state;
+
+    if (!classNumber || !starting_date) {
+      this.setState({errorMessage: 'Please make sure to fill all the inputs'})
       return;
     }
 
     timelineStore
-      .addTheClass(className, starting_date)
+      .addTheClass(`Class ${classNumber}`, starting_date)
       .then(res => {
         //Awesome got the response close the modal
         this.props.closeModal();
       })
       .catch(err => {
-        errorArea.innerHTML =
-          'There was a network error! Please make sure you have internet connection';
+        console.log(err);
+        this.setState({errorMessage: 'There was a network error!'})
       });
   };
   render() {
+    console.log(this.state);
     return (
       <div>
         <Modal
@@ -61,14 +65,18 @@ export default class AddClassModal extends Component {
           visible={this.props.isToggled}
           closeModal={this.props.closeModal}
         >
-          <label htmlFor="className">Class name</label>
-          <input
-            required
-            id="className"
-            type="text"
-            value={this.state.className}
-            onChange={this.handleChangeClassNameInput}
-          />
+          <label htmlFor="classNumber">Class name</label>
+          <div>
+            <span>CLass </span>
+            <input
+              required
+              placeholder="Class number"
+              name="classNumber"
+              type="number"
+              value={this.state.classNumber}
+              onChange={this.handleChangeClassNameInput}
+            />
+          </div>
           <label htmlFor="starting_date">Starting date</label>
           <input
             required
@@ -79,7 +87,7 @@ export default class AddClassModal extends Component {
           />
           <button onClick={this.addNewClass}>Add class</button>
           <button onClick={this.props.closeModal}>Cancel</button>
-          <span ref="errorArea" style={{ color: 'red' }} />
+          <span>{this.state.errorMessage}</span>
         </Modal>
       </div>
     );

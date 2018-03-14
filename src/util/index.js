@@ -214,6 +214,7 @@ export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
 }
 
 export function addNewClass(className, starting_date) {
+  console.log('here handeling it');
   const date = new Date(starting_date);
   const body = {
     group_name: className,
@@ -226,7 +227,7 @@ export function addNewClass(className, starting_date) {
       'Content-Type': 'Application/json'
     },
     body: JSON.stringify(body)
-  }).then(res => res.json());
+  });
 }
 
 export function getALlPossibleModules() {

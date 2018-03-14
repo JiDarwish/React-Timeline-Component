@@ -91,7 +91,6 @@ export default class AssignTeacherModal extends Component {
   };
 
   render() {
-    console.log(this.state);
     const { selectedModule, teachers, infoSelectedModule } = this.props;
     let title;
     if (selectedModule) {
